@@ -8,20 +8,21 @@ from database.database_manager import DatabaseManager
 SHARE_FOR_TRAINING = 0.85
 
 class DataPreparer:
-    def __init__(self):
+    def __init__(self, training_start, training_end):
         self.scaler = MinMaxScaler(feature_range=(0, 1))
-        dataframe = self.load_data_from_database()
+        dataframe = self.load_data_from_database(training_start, training_end)
         self.number_of_columns = len(dataframe.columns)
         self.datasetOrig = dataframe.values
         self.datasetOrig = self.datasetOrig.astype('float32')
         self.predictor_column_no = self.number_of_columns - 1
         self.share_for_training = SHARE_FOR_TRAINING
 
-    def load_data_from_database(self):
+    def load_data_from_database(self, starting_time, ending_time):
         database_manager = DatabaseManager()
-        dataframe = database_manager.read_from_database()
-        del dataframe['index']
-        #dataframe.to_csv('db_measures.csv', index=False)
+        dataframe = database_manager.read_from_database_by_time(starting_time, ending_time)
+        #del dataframe['index']
+        del dataframe['_time']
+        dataframe.to_csv('db_measures.csv', index=False)
         return dataframe
 
 

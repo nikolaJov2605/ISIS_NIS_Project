@@ -21,8 +21,8 @@ class WeatherPreparer():
     def add_missing_entries(self, data_frame):
         for idx, row in data_frame.iterrows():
             one_hour = datetime.timedelta(hours=1)
-            current_time = data_frame.iloc[idx]['time']
-            next_time = data_frame.iloc[idx + 1]['time']
+            current_time = data_frame.iloc[idx]['_time']
+            next_time = data_frame.iloc[idx + 1]['_time']
             #diff = datetime.timedelta(current_time, next_time)
             diff = next_time - current_time
             if diff > one_hour:
@@ -33,11 +33,11 @@ class WeatherPreparer():
                     else:
                         dt = datetime.datetime(current_time.year, current_time.month, current_time.day, current_time.hour + 1, current_time.minute, current_time.second)
 
-                    df_temp = {'time': dt}
+                    df_temp = {'_time': dt}
                     data_frame = data_frame._append(df_temp, ignore_index = True)
 
 
-        data_frame = data_frame.sort_values(by=['time'])
+        data_frame = data_frame.sort_values(by=['_time'])
         return data_frame
 
 

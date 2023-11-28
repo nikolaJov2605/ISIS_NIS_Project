@@ -6,7 +6,7 @@ import numpy
 import pyqtgraph
 
 from PyQt5 import QtGui
-from PyQt5.QtWidgets import QDialog, QApplication, QFileDialog, QMainWindow
+from PyQt5.QtWidgets import QDialog, QApplication, QFileDialog, QMainWindow, QMessageBox
 from PyQt5.uic import loadUi
 from database.database_manager import DatabaseManager
 from load_forecast.data_converter import DataConverter
@@ -80,16 +80,23 @@ class MainWindow(QMainWindow):
         if self.file is None:
             return
 
-
         print("Loading and converting data...")
         importCSVEdit = "data/" + self.importCSVEdit.text()#.split('/')[-1]
         data_converter = DataConverter(importCSVEdit)
         preprocessed_data = data_converter.load_and_convert_data()
+
+        self.max_date = max(preprocessed_data['_time'])
+        self.min_date = min(preprocessed_data['_time'])
+
+
         print("\nDone.")
         print("\nWriting to database...")
         time1 = time.time()
         database_manager = DatabaseManager()
-        database_manager.write_to_database(preprocessed_data)
+        write_data = database_manager.write_to_database(preprocessed_data)
+        if write_data == False:
+            print("An error occurred while writing to database")
+            return False
        # data_writer = DataWriter(ret_data)
        # data_writer.write_to_database()
         time2 = time.time()
@@ -99,6 +106,7 @@ class MainWindow(QMainWindow):
         self.converted_data = preprocessed_data
         if self.converted_data is not None:
             self.trainButton.setEnabled(True)
+        return True
 
     def start_ann(self):
         model_loaded = False
@@ -107,8 +115,16 @@ class MainWindow(QMainWindow):
         else:
             self.loaded_model_name = ''
 
+        train_start = self.trainingFromDate.dateTime()
+        train_end = self.trainingToDate.dateTime()
+
+        if train_end <= train_start or train_start < self.min_date or train_end > self.max_date:
+            QMessageBox.critical(self, "Error", 'Invalid dates', QMessageBox.Ok)
+            return
+        train_start = train_start.toString('yyyy-MM-dd')
+        train_end = train_end.toString('yyyy-MM-dd')
         print("\nPreparing data...")
-        data_preparer = DataPreparer()
+        data_preparer = DataPreparer(train_start, train_end)
         trainX, trainY, testX, testY = data_preparer.prepare_for_training()
         print("\nDone.")
         print("Doing some learning...")

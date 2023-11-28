@@ -11,6 +11,6 @@ class LoadPreparer():
         del data_frame['TimeFrom']
         del data_frame['TimeTo']
         data_frame.rename(columns={'Load (MW/h)':'load'}, inplace=True)
-        data_frame.rename(columns={'DateShort':'time'}, inplace=True)
+        data_frame.rename(columns={'DateShort':'_time'}, inplace=True)
 
         return data_frame

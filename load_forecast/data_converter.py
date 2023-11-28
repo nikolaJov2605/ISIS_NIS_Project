@@ -52,8 +52,8 @@ class DataConverter:
         weather_cols = ["Local time", "T", "U", "Ff", "N"]
         exc_weather = pandas.read_excel(self.filename, sheet_name='weather', usecols=weather_cols)
 
-        exc_weather.rename(columns={'Local time':'time'}, inplace=True)
-        exc_weather['time'] = pandas.to_datetime(exc_weather['time'], dayfirst=True)
+        exc_weather.rename(columns={'Local time':'_time'}, inplace=True)
+        exc_weather['_time'] = pandas.to_datetime(exc_weather['_time'], dayfirst=True)
 
         wp = WeatherPreparer()
         exc_weather = wp.prepare_weather_data(exc_weather)
@@ -75,7 +75,7 @@ class DataConverter:
 
         # --------------------------- MEARGED COLLECTIONS --------------------------- #
 
-        measures = pandas.merge(exc_weather, exc_load, on='time', how='left')
+        measures = pandas.merge(exc_weather, exc_load, on='_time', how='left')
 
         # del measures['Local time']
 

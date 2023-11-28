@@ -15,11 +15,11 @@ class TimePreparer:
         self.insert_month_collumns()
         #self.insert_season_collumns()
 
-        del self.dataframe['time']
+        #del self.dataframe['_time']
         return self.dataframe
 
     def insert_hours_columns(self):
-        hours = self.dataframe['time'].dt.hour
+        hours = self.dataframe['_time'].dt.hour
         seconds = hours * 3600
         sinus_time = numpy.sin(2 * numpy.pi * seconds / SECONDS_IN_DAY)
         cosinus_time = numpy.cos(2 * numpy.pi * seconds / SECONDS_IN_DAY)
@@ -27,7 +27,7 @@ class TimePreparer:
         self.dataframe.insert(1, 'cos_time', cosinus_time)
 
     def insert_day_columns(self):
-        date = self.dataframe['time']
+        date = self.dataframe['_time']
         day = date.apply(lambda x: x.weekday())
 
         sinus_time = numpy.sin(2 * numpy.pi * day / DAYS_IN_WEEK)
@@ -37,7 +37,7 @@ class TimePreparer:
         self.dataframe.insert(1, 'cos_day', cosinus_time)
 
     def insert_month_collumns(self):
-        month = self.dataframe['time'].dt.month
+        month = self.dataframe['_time'].dt.month
 
         sinus_time = numpy.sin(2 * numpy.pi * month / MONTHS_IN_YEAR)
         cosinus_time = numpy.cos(2 * numpy.pi * month / MONTHS_IN_YEAR)
@@ -51,8 +51,8 @@ class TimePreparer:
         return season / SEASONS_IN_YEAR
 
     def get_current_season(self):
-        month = self.dataframe['time'].dt.month
-        day = self.dataframe['time'].dt.day
+        month = self.dataframe['_time'].dt.month
+        day = self.dataframe['_time'].dt.day
 
         if (month == 3 & day >= 21) | (month in [4, 5]) | (month == 6 & day < 21):
             return 1#"SPRING"
