@@ -14,6 +14,7 @@ from load_forecast.training.data_preparer import DataPreparer
 from load_forecast.training.ann_regression import AnnRegression
 from load_forecast.scorer import Scorer
 from load_forecast.plotting import Plotting
+from ui.service_invoker import ServiceInvoker
 #from front.stream import Stream
 
 class MainWindow(QMainWindow):
@@ -24,9 +25,15 @@ class MainWindow(QMainWindow):
         loadUi("ui/frontend.ui", self)
         self.browseCSVButton.clicked.connect(self.browse_files)
         self.browseModelButton.clicked.connect(self.browse_model)
-        self.saveButton.clicked.connect(self.load_to_database_thread)
+        self.saveButton.clicked.connect(self.write_to_database)
         #self.trainButton.clicked.connect(self.start_ann_thread)
         self.trainButton.clicked.connect(self.start_ann)
+        self.loadModelButton.clicked.connect(self.load_model_for_prediction)
+
+        self.file = None
+        self.loaded_model_name = ''
+
+        self.service_invoker = ServiceInvoker()
 
 
        # sys.stdout = Stream(newText=self.onUpdateText)
@@ -34,13 +41,13 @@ class MainWindow(QMainWindow):
         #x = threading.Thread(target=self.listen)
         #x.start()
 
-    def load_to_database_thread(self):
-        x = threading.Thread(target=self.load_to_database)
-        x.start()
+    # def write_to_database_thread(self):
+    #     x = threading.Thread(target=self.write_to_database)
+    #     x.start()
 
-    def start_ann_thread(self):
-        x = threading.Thread(target=self.start_ann)
-        x.start()
+    # def start_ann_thread(self):
+    #     x = threading.Thread(target=self.start_ann)
+    #     x.start()
 
     def onUpdateText(self, text):
         cursor = self.textedit.textCursor()
@@ -72,41 +79,26 @@ class MainWindow(QMainWindow):
         self.loaded_model_name = name
         if self.loaded_model_name is not None:
             self.loadModelButton.setEnabled(True)
-            self.trainButton.setEnabled(True)
+            self.predictButton.setEnabled(True)
             self.file = None
             self.importCSVEdit.setText('')
 
-    def load_to_database(self):
-        if self.file is None:
+    def write_to_database(self):
+        if self.file is None:   # return if filename is not loaded
             return
 
         print("Loading and converting data...")
         importCSVEdit = "data/" + self.importCSVEdit.text()#.split('/')[-1]
-        data_converter = DataConverter(importCSVEdit)
-        preprocessed_data = data_converter.load_and_convert_data()
+        try:
+            self.preprocessed_data, function_result = self.service_invoker.write_data_to_database(importCSVEdit)
+        except Exception as e:
+            QMessageBox.critical(self, "Error", str(e), QMessageBox.Ok)
+            return
 
-        self.max_date = max(preprocessed_data['_time'])
-        self.min_date = min(preprocessed_data['_time'])
-
-
-        print("\nDone.")
-        print("\nWriting to database...")
-        time1 = time.time()
-        database_manager = DatabaseManager()
-        write_data = database_manager.write_to_database(preprocessed_data)
-        if write_data == False:
-            print("An error occurred while writing to database")
-            return False
-       # data_writer = DataWriter(ret_data)
-       # data_writer.write_to_database()
-        time2 = time.time()
-        print("\nDone.")
-        print('Writing to database duration: %.2f seconds' % (time2 - time1))
-
-        self.converted_data = preprocessed_data
-        if self.converted_data is not None:
-            self.trainButton.setEnabled(True)
-        return True
+        # once we write the data to the database, we can enable the button for training
+        self.trainButton.setEnabled(True)
+        QMessageBox.information(self, "Info", 'Preprocessed data saved to database!', QMessageBox.Ok)
+        return function_result
 
     def start_ann(self):
         model_loaded = False
@@ -118,23 +110,11 @@ class MainWindow(QMainWindow):
         train_start = self.trainingFromDate.dateTime()
         train_end = self.trainingToDate.dateTime()
 
-        if train_end <= train_start or train_start < self.min_date or train_end > self.max_date:
-            QMessageBox.critical(self, "Error", 'Invalid dates', QMessageBox.Ok)
+        try:
+            trainPredict, trainY, testPredict, testY = self.service_invoker.start_training(train_start, train_end)
+        except Exception as e:
+            QMessageBox.critical(self, "Error", str(e), QMessageBox.Ok)
             return
-        train_start = train_start.toString('yyyy-MM-dd')
-        train_end = train_end.toString('yyyy-MM-dd')
-        print("\nPreparing data...")
-        data_preparer = DataPreparer(train_start, train_end)
-        trainX, trainY, testX, testY = data_preparer.prepare_for_training()
-        print("\nDone.")
-        print("Doing some learning...")
-        ann_regression = AnnRegression()
-        time_begin = time.time()
-        trainPredict, testPredict = ann_regression.compile_fit_predict(trainX, trainY, testX, self.loaded_model_name)
-        time_end = time.time()
-        print('Training duration: %.2f seconds' % (time_end - time_begin))
-
-        trainPredict, trainY, testPredict, testY = data_preparer.inverse_transform(trainPredict, testPredict)
 
 
         print("\nCalculating error...")
@@ -151,6 +131,18 @@ class MainWindow(QMainWindow):
         custom_plotting = Plotting()
         custom_plotting.show_plots(testPredict, testY)
 
+
+    def load_model_for_prediction(self):
+        return None
+
+    def predict_power_consumption(self):
+        prediction_begin = self.predictionFromDate.dateTime()
+        if prediction_begin < self.min_date:
+            QMessageBox.critical(self, "Error", 'Invalid dates', QMessageBox.Ok)
+            return
+
+        length_in_days = self.dateCountBox
+        return None
 
     def __del__(self):
         sys.stdout = sys.__stdout__

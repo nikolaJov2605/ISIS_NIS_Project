@@ -1,7 +1,7 @@
 from re import VERBOSE
 
 
-EPOCH_NUMBER = 75      # broj iteracija | bilo je 75
+EPOCH_NUMBER = 2      # broj iteracija | bilo je 75
 BATCH_SIZE_NUMBER = 1   # broj paketa
 COST_FUNCTION = 'mean_squared_error'
 OPTIMIZER = 'adam'

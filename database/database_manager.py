@@ -2,6 +2,7 @@ import pyodbc as odbc
 import urllib
 import pandas
 from sqlalchemy import create_engine
+from datetime import datetime, timedelta
 
 class DatabaseManager():
     def __init__(self):
@@ -27,8 +28,11 @@ class DatabaseManager():
 
 
     def read_from_database_by_time(self, starting_time, ending_time):
+        ending_time = datetime.strptime(ending_time, '%Y-%m-%d')
+        ending_time = ending_time + timedelta(days=1)
+        ending_time = ending_time.strftime('%Y-%m-%d')
         params = [starting_time, ending_time]
-        query = "SELECT * from Measures WHERE _time >= '{param0}' and _time <= '{param1}'".format(param0=params[0], param1=params[1])
+        query = "SELECT * from Measures WHERE _time >= '{param0}' and _time < '{param1}'".format(param0=params[0], param1=params[1])
 
         df = pandas.read_sql_query(query, con=self.engine)
         return df

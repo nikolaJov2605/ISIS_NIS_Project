@@ -30,13 +30,16 @@ class DataPreparer:
         dataset = self.scaler.fit_transform(self.datasetOrig)                       #skaliranje
         print(dataset.max(axis=0)) # will return max value of each column
         print(dataset.min(axis=0))
+
         train_size = int(len(dataset) * self.share_for_training)                    #velicina podataka za trening
-        test_size = len(dataset) - train_size                                       #velicina za test
+        #test_size = len(dataset) - train_size                                       #velicina za test
         train, test = dataset[0:train_size,:], dataset[train_size:len(dataset),:]   # definicija setova za trening i test
+
         print(len(train), len(test))
         look_back = self.number_of_columns
         trainX, trainY = self.create_dataset(train, look_back)              # podela na zavisne i nezavisne podatke
         testX, testY = self.create_dataset(test, look_back)
+
         trainX = numpy.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))   # skaliranje
         testX = numpy.reshape(testX, (testX.shape[0], 1, testX.shape[1]))       # skaliranje
         self.trainX = trainX
@@ -46,24 +49,24 @@ class DataPreparer:
         return trainX.copy(), trainY.copy(), testX.copy(), testY.copy()
 
     def inverse_transform(self, trainPredict, testPredict): # vracanje na prave vrednosti
-        trainPredict = numpy.reshape(trainPredict, (trainPredict.shape[0], trainPredict.shape[1]))
-        testPredict = numpy.reshape(testPredict, (testPredict.shape[0], testPredict.shape[1]))
-        self.trainX = numpy.reshape(self.trainX, (self.trainX.shape[0], self.trainX.shape[2]))
-        self.testX = numpy.reshape(self.testX, (self.testX.shape[0], self.testX.shape[2]))
-        trainXAndPredict = numpy.concatenate((self.trainX, trainPredict),axis=1)
-        testXAndPredict = numpy.concatenate((self.testX, testPredict),axis=1)
-        trainY = numpy.reshape(self.trainY, (self.trainY.shape[0], 1))
-        testY = numpy.reshape(self.testY, (self.testY.shape[0], 1))
-        trainXAndY = numpy.concatenate((self.trainX, trainY),axis=1)
-        testXAndY = numpy.concatenate((self.testX, testY),axis=1)
-        trainXAndPredict = self.scaler.inverse_transform(trainXAndPredict)
-        trainXAndY = self.scaler.inverse_transform(trainXAndY)
-        testXAndPredict = self.scaler.inverse_transform(testXAndPredict)
-        testXAndY = self.scaler.inverse_transform(testXAndY)
-        trainPredict = trainXAndPredict[:,self.predictor_column_no];
+        trainPredict = numpy.reshape(trainPredict, (trainPredict.shape[0], trainPredict.shape[1]))  # pakujemo dobijene load-ove u mnogo vrsta i jednu kolonu
+        testPredict = numpy.reshape(testPredict, (testPredict.shape[0], testPredict.shape[1]))      # pakujemo test load-ove u mnogo vrsta i jednu kolonu
+        self.trainX = numpy.reshape(self.trainX, (self.trainX.shape[0], self.trainX.shape[2]))      # trening nezavisni podaci prakticno, 10 kolona
+        self.testX = numpy.reshape(self.testX, (self.testX.shape[0], self.testX.shape[2]))          # test nezavisni podaci, isto kao i trening, samo ih ima manje
+        trainXAndPredict = numpy.concatenate((self.trainX, trainPredict),axis=1)    # trening podaci spojeni sa rezultatima predikcije
+        testXAndPredict = numpy.concatenate((self.testX, testPredict),axis=1)       # test podaci spojeni sa test rezultatima predikcije
+        trainY = numpy.reshape(self.trainY, (self.trainY.shape[0], 1))          # zavisni podaci trening skupa spakovani u kolonu
+        testY = numpy.reshape(self.testY, (self.testY.shape[0], 1))             # zavisni podaci test skupa spakovani u kolonu
+        trainXAndY = numpy.concatenate((self.trainX, trainY),axis=1)        # spojeni trening zavisni i nezavisni podaci
+        testXAndY = numpy.concatenate((self.testX, testY),axis=1)           # spojeni test zavisni i nezavisni podaci
+        trainXAndPredict = self.scaler.inverse_transform(trainXAndPredict)  # inverzno trening podaci spojeni sa rezultatima predikcije |=> ova dva
+        trainXAndY = self.scaler.inverse_transform(trainXAndY)              # inverzno trening podaci zavisni i nezavisni               |
+        testXAndPredict = self.scaler.inverse_transform(testXAndPredict)    # inverzno test podaci spojeni sa rezultatima predikcije |=> ova dva
+        testXAndY = self.scaler.inverse_transform(testXAndY)                # inverzno test podaci zavisni i nezavisni               |
+        trainPredict = trainXAndPredict[:,self.predictor_column_no]
         trainY = trainXAndY[:,self.predictor_column_no]
-        testPredict = testXAndPredict[:,self.predictor_column_no];
-        testY = testXAndY[:,self.predictor_column_no];
+        testPredict = testXAndPredict[:,self.predictor_column_no]
+        testY = testXAndY[:,self.predictor_column_no]
         return trainPredict, trainY, testPredict, testY
 
 

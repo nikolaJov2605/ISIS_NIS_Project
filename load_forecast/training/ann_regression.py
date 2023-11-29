@@ -54,10 +54,14 @@ class AnnRegression(AnnBase):
         testPredict = self.model.predict(testX)
         return trainPredict, testPredict
 
-    def compile_fit_predict(self, trainX, trainY, testX, loaded_model_name):
-        if loaded_model_name != '':
-            self.use_current_model(loaded_model_name, trainX)     #ucitavanje modela
-        else:
-            self.compile_and_fit(trainX, trainY)
+    def get_selected_model(self, loaded_model_name, trainX, testX):
+        self.use_current_model(loaded_model_name, trainX)     #ucitavanje modela
+        return self.get_predict(testX)
+
+    def compile_fit_predict(self, trainX, trainY, testX):
+        # if loaded_model_name != '':
+        #     self.use_current_model(loaded_model_name, trainX)     #ucitavanje modela
+        # else:
+        self.compile_and_fit(trainX, trainY)
         return self.get_predict(testX)
 
