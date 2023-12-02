@@ -1,3 +1,4 @@
+from datetime import timedelta
 import sys
 import threading
 import time
@@ -6,8 +7,9 @@ import numpy
 import pyqtgraph
 
 from PyQt5 import QtGui
-from PyQt5.QtWidgets import QDialog, QApplication, QFileDialog, QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QDialog, QApplication, QFileDialog, QMainWindow, QMessageBox, QTableWidgetItem, QHeaderView
 from PyQt5.uic import loadUi
+from PyQt5.QtCore import Qt
 from database.database_manager import DatabaseManager
 from load_forecast.data_converter import DataConverter
 from load_forecast.training.data_preparer import DataPreparer
@@ -28,7 +30,9 @@ class MainWindow(QMainWindow):
         self.saveButton.clicked.connect(self.write_to_database)
         #self.trainButton.clicked.connect(self.start_ann_thread)
         self.trainButton.clicked.connect(self.start_ann)
-        self.loadModelButton.clicked.connect(self.load_model_for_prediction)
+        #self.loadModelButton.clicked.connect(self.load_model_for_prediction)
+        self.predictButton.clicked.connect(self.predict_power_consumption)
+        self.resultsButton.clicked.connect(self.filter_results)
 
         self.file = None
         self.loaded_model_name = ''
@@ -107,11 +111,11 @@ class MainWindow(QMainWindow):
         else:
             self.loaded_model_name = ''
 
-        train_start = self.trainingFromDate.dateTime()
-        train_end = self.trainingToDate.dateTime()
+        train_start = self.trainingFromDate.dateTime().toPyDateTime()
+        train_end = self.trainingToDate.dateTime().toPyDateTime()
 
         try:
-            trainPredict, trainY, testPredict, testY = self.service_invoker.start_training(train_start, train_end)
+            trainPredict, trainY, testPredict, testY = self.service_invoker.start_training(train_start, train_end, do_training=True)
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e), QMessageBox.Ok)
             return
@@ -132,17 +136,59 @@ class MainWindow(QMainWindow):
         custom_plotting.show_plots(testPredict, testY)
 
 
-    def load_model_for_prediction(self):
-        return None
+    # def load_model_for_prediction(self):
+    #     train_start = self.predictionFromDate.dateTime()
+    #     return None
 
     def predict_power_consumption(self):
-        prediction_begin = self.predictionFromDate.dateTime()
-        if prediction_begin < self.min_date:
-            QMessageBox.critical(self, "Error", 'Invalid dates', QMessageBox.Ok)
+        prediction_begin = self.predictionFromDate.dateTime().toPyDateTime()
+        #prediction_begin = self.predictionFromDate.toPyDateTime()
+        length_in_days = self.dayCountBox.value()
+        prediction_end = prediction_begin + timedelta(days=length_in_days - 1)  #substracting one day because db_manager is adding one when quierying and another one because it is already included (condition in query is >=)
+        try:
+            result = self.service_invoker.load_existing_trained_model_and_predict(prediction_begin, prediction_end, do_training=False)
+        except Exception as e:
+            QMessageBox.critical(self, "Error", str(e), QMessageBox.Ok)
             return
 
-        length_in_days = self.dateCountBox
-        return None
+        try:
+            result_dataframe = self.service_invoker.export_results(prediction_begin, prediction_end)
+        except Exception as e:
+            QMessageBox.critical(self, "Error", str(e), QMessageBox.Ok)
+            return
+
+        self.populate_table(result_dataframe)
+
+        # header = self.tableResults.horizontalHeader()
+
+        # #header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        # for i in range(result_dataframe.shape[1]):
+        #     header.setSectionResizeMode(i, QHeaderView.ResizeMode.Strech)#ResizeToContents)
+        # #self.tableResults.resizeColumnsToContents()
+
+
+    def filter_results(self):
+        starting_date = self.resultsFromDate.dateTime().toPyDateTime()
+        ending_date = self.resultsToDate.dateTime().toPyDateTime()
+        filtered_data = self.service_invoker.filter_results(starting_date, ending_date)
+
+        self.populate_table(filtered_data)
+
+
+    def populate_table(self, dataframe):
+        self.tableResults.setRowCount(dataframe.shape[0])
+        self.tableResults.setColumnCount(dataframe.shape[1])
+
+        self.tableResults.setHorizontalHeaderLabels(list(dataframe.columns))
+
+        for i in range(dataframe.shape[0]):
+            for j in range(dataframe.shape[1]):
+                item = QTableWidgetItem(str(dataframe.iloc[i, j]))
+                item.setTextAlignment(Qt.AlignHCenter)
+                self.tableResults.setItem(i, j, item)
+
+        self.tableResults.horizontalHeader().setStretchLastSection(True)
+        self.tableResults.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
     def __del__(self):
         sys.stdout = sys.__stdout__

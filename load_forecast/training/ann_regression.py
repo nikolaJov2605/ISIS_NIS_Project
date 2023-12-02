@@ -7,6 +7,7 @@ from load_forecast.training.ann_base import AnnBase
 
 MODEL_PATH = "load_forecast/trained_models"
 MODEL_NAME = 'model'
+TRAINED_MODEL = '/current_model4'
 class AnnRegression(AnnBase):
     def model_naming(self):
         model_cnt = 0
@@ -58,10 +59,11 @@ class AnnRegression(AnnBase):
         self.use_current_model(loaded_model_name, trainX)     #ucitavanje modela
         return self.get_predict(testX)
 
-    def compile_fit_predict(self, trainX, trainY, testX):
-        # if loaded_model_name != '':
-        #     self.use_current_model(loaded_model_name, trainX)     #ucitavanje modela
-        # else:
-        self.compile_and_fit(trainX, trainY)
+    def compile_fit_predict(self, trainX, trainY, testX, do_training):
+        if do_training:
+            self.compile_and_fit(trainX, trainY)
+        else:
+            #self.use_current_model(loaded_model_name, trainX)     #ucitavanje modela
+            self.use_current_model(MODEL_PATH + TRAINED_MODEL, trainX)
         return self.get_predict(testX)
 

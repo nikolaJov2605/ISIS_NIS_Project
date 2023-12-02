@@ -205,9 +205,19 @@
          <hour>0</hour>
          <minute>0</minute>
          <second>0</second>
-         <year>2015</year>
+         <year>2016</year>
          <month>1</month>
          <day>1</day>
+        </datetime>
+       </property>
+       <property name="maximumDateTime">
+        <datetime>
+         <hour>23</hour>
+         <minute>59</minute>
+         <second>59</second>
+         <year>2019</year>
+         <month>5</month>
+         <day>4</day>
         </datetime>
        </property>
        <property name="minimumDateTime">
@@ -215,21 +225,21 @@
          <hour>0</hour>
          <minute>0</minute>
          <second>0</second>
-         <year>2015</year>
+         <year>2016</year>
          <month>1</month>
          <day>1</day>
         </datetime>
        </property>
        <property name="maximumDate">
         <date>
-         <year>2024</year>
-         <month>12</month>
-         <day>31</day>
+         <year>2019</year>
+         <month>5</month>
+         <day>4</day>
         </date>
        </property>
        <property name="minimumDate">
         <date>
-         <year>2015</year>
+         <year>2016</year>
          <month>1</month>
          <day>1</day>
         </date>
@@ -240,6 +250,9 @@
          <minute>59</minute>
          <second>59</second>
         </time>
+       </property>
+       <property name="displayFormat">
+        <string>M/d/yyyy</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_2">
@@ -285,9 +298,9 @@
          <hour>0</hour>
          <minute>0</minute>
          <second>0</second>
-         <year>2015</year>
-         <month>1</month>
-         <day>1</day>
+         <year>2019</year>
+         <month>5</month>
+         <day>5</day>
         </datetime>
        </property>
        <property name="minimumDateTime">
@@ -295,23 +308,23 @@
          <hour>0</hour>
          <minute>0</minute>
          <second>0</second>
-         <year>2015</year>
+         <year>2016</year>
          <month>1</month>
-         <day>1</day>
+         <day>2</day>
         </datetime>
        </property>
        <property name="maximumDate">
         <date>
-         <year>2024</year>
-         <month>12</month>
-         <day>31</day>
+         <year>2019</year>
+         <month>5</month>
+         <day>5</day>
         </date>
        </property>
        <property name="minimumDate">
         <date>
-         <year>2015</year>
+         <year>2016</year>
          <month>1</month>
-         <day>1</day>
+         <day>2</day>
         </date>
        </property>
        <property name="maximumTime">
@@ -429,7 +442,7 @@
          <hour>0</hour>
          <minute>0</minute>
          <second>0</second>
-         <year>2015</year>
+         <year>2016</year>
          <month>1</month>
          <day>1</day>
         </datetime>
@@ -508,7 +521,7 @@
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
-      <widget class="QSpinBox" name="dateCountBox">
+      <widget class="QSpinBox" name="dayCountBox">
        <property name="geometry">
         <rect>
          <x>630</x>
@@ -833,16 +846,6 @@
         </time>
        </property>
       </widget>
-      <widget class="QTableView" name="tableView">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>80</y>
-         <width>1011</width>
-         <height>191</height>
-        </rect>
-       </property>
-      </widget>
       <widget class="QPushButton" name="resultsButton">
        <property name="geometry">
         <rect>
@@ -853,8 +856,24 @@
         </rect>
        </property>
        <property name="text">
-        <string>Load results</string>
+        <string>Filter results</string>
        </property>
+      </widget>
+      <widget class="QTableWidget" name="tableResults">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>80</y>
+         <width>1011</width>
+         <height>192</height>
+        </rect>
+       </property>
+       <attribute name="horizontalHeaderCascadingSectionResizes">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="horizontalHeaderStretchLastSection">
+        <bool>false</bool>
+       </attribute>
       </widget>
      </widget>
     </widget>

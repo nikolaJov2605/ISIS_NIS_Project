@@ -1,6 +1,4 @@
 import numpy
-import pandas
-#from database.data_manager import DataManager
 from sklearn.preprocessing import MinMaxScaler
 
 #from database.database_manager import DatabaseManager
@@ -8,64 +6,36 @@ from load_forecast.training.data_helper import DataHelper
 
 SHARE_FOR_TRAINING = 0.85
 
-class DataPreparer:
-    def __init__(self, training_start, training_end):
+class ModelLoader:
+    def __init__(self, date_start, date_end):
         self.data_helper = DataHelper()
         self.scaler = MinMaxScaler(feature_range=(0, 1))
-        dataframe = self.data_helper.load_data_from_database(training_start, training_end)
+        dataframe = self.data_helper.load_data_from_database(date_start, date_end)
         self.number_of_columns = len(dataframe.columns)
         self.datasetOrig = dataframe.values
         self.datasetOrig = self.datasetOrig.astype('float32')
         self.predictor_column_no = self.number_of_columns - 1
         self.share_for_training = SHARE_FOR_TRAINING
-        self.data_helper = DataHelper()
-
-    # def load_data_from_database(self, starting_time, ending_time):
-    #     database_manager = DatabaseManager()
-    #     dataframe = database_manager.read_from_database_by_time(starting_time, ending_time)
-    #     #del dataframe['index']
-    #     del dataframe['_time']
-    #     dataframe.to_csv('db_measures.csv', index=False)
-    #     return dataframe
 
 
-    def prepare_for_training(self):
-        dataset = self.scaler.fit_transform(self.datasetOrig)                       #skaliranje
-        print(dataset.max(axis=0)) # will return max value of each column
-        print(dataset.min(axis=0))
-
-        train_size = int(len(dataset) * self.share_for_training)                    #velicina podataka za trening
-        #test_size = len(dataset) - train_size                                       #velicina za test
-        train, test = dataset[0:train_size,:], dataset[train_size:len(dataset),:]   # definicija setova za trening i test
-
-        print(len(train), len(test))
+    def prepare_model_for_prediction(self):
+        dataset = self.scaler.fit_transform(self.datasetOrig)
+        #train_size = int(len(dataset) * self.share_for_training)
+        #train, test = dataset[0:train_size,:], dataset[train_size:len(dataset),:]
+        train, test = dataset[0:len(dataset),:], dataset[0:len(dataset),:]
         look_back = self.number_of_columns
-        trainX, trainY = self.data_helper.create_dataset(train, look_back)              # podela na zavisne i nezavisne podatke
+        trainX, trainY = self.data_helper.create_dataset(train, look_back)
         testX, testY = self.data_helper.create_dataset(test, look_back)
 
         trainX = numpy.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
         testX = numpy.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
+
         self.trainX = trainX
         self.trainY = trainY
         self.testX = testX
         self.testY = testY
-        return trainX.copy(), trainY.copy(), testX.copy(), testY.copy()
 
-    # def prepare_model_for_prediction(self):
-    #     dataset = self.scaler.fit_transform(self.datasetOrig)
-    #     train_size = int(len(dataset) * self.share_for_training)
-    #     train, test = dataset[0:train_size,:], dataset[train_size:len(dataset),:]
-    #     look_back = self.number_of_columns
-    #     trainX, trainY = self.create_dataset(train, look_back)
-    #     testX, testY = self.create_dataset(test, look_back)
-
-    #     trainX = numpy.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
-    #     testX = numpy.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
-
-    #     self.trainX = trainX
-    #     self.testX = testX
-
-    #     return trainX, testX
+        return trainX, trainY, testX, testY
 
     def inverse_transform(self, trainPredict, testPredict): # vracanje na prave vrednosti
         trainPredict = numpy.reshape(trainPredict, (trainPredict.shape[0], trainPredict.shape[1]))  # pakujemo dobijene load-ove u mnogo vrsta i jednu kolonu
@@ -88,6 +58,12 @@ class DataPreparer:
         testY = testXAndY[:,self.predictor_column_no]
         return trainPredict, trainY, testPredict, testY
 
+    # def load_data_from_database(self, starting_time, ending_time):
+    #     database_manager = DatabaseManager()
+    #     dataframe = database_manager.read_from_database_by_time(starting_time, ending_time)
+    #     del dataframe['_time']
+    #     #dataframe.to_csv('db_measures.csv', index=False)
+    #     return dataframe
 
     # def create_dataset(self, dataset, look_back):
     #     dataX, dataY = [], []

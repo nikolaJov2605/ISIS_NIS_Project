@@ -12,27 +12,39 @@ class DatabaseManager():
         #self.connection = odbc.connect(self.connection_string)
         #self.cursor = self.connection.cursor()
 
-    def write_to_database(self, data_frame):
+    def write_to_database(self, data_frame, table_name):
         try:
-            data_frame.to_sql(name='Measures', index=False, con = self.engine, if_exists='replace')
+            data_frame.to_sql(name=table_name, index=False, con = self.engine, if_exists='replace')
             return True
         except:
             print("An exception occurred during storing data to database")
             return False
 
 
-    def read_from_database(self):
-        df = pandas.read_sql_table("Measures", self.engine)
+    def read_from_database(self, table_name):
+        df = pandas.read_sql_table(table_name, self.engine)
 
         return df
 
 
-    def read_from_database_by_time(self, starting_time, ending_time):
-        ending_time = datetime.strptime(ending_time, '%Y-%m-%d')
+    def read_measures_from_database_by_time(self, starting_time, ending_time):
+        #ending_time = datetime.strptime(ending_time, '%Y-%m-%d')
+        starting_time = starting_time.strftime('%Y-%m-%d')
         ending_time = ending_time + timedelta(days=1)
         ending_time = ending_time.strftime('%Y-%m-%d')
         params = [starting_time, ending_time]
         query = "SELECT * from Measures WHERE _time >= '{param0}' and _time < '{param1}'".format(param0=params[0], param1=params[1])
+
+        df = pandas.read_sql_query(query, con=self.engine)
+        return df
+    
+    def read_results_from_database_by_time(self, starting_time, ending_time):
+        #ending_time = datetime.strptime(ending_time, '%Y-%m-%d')
+        starting_time = starting_time.strftime('%Y-%m-%d')
+        ending_time = ending_time + timedelta(days=1)
+        ending_time = ending_time.strftime('%Y-%m-%d')
+        params = [starting_time, ending_time]
+        query = "SELECT * from Results WHERE _time >= '{param0}' and _time < '{param1}'".format(param0=params[0], param1=params[1])
 
         df = pandas.read_sql_query(query, con=self.engine)
         return df
