@@ -16,6 +16,7 @@ from load_forecast.training.data_preparer import DataPreparer
 from load_forecast.training.ann_regression import AnnRegression
 from load_forecast.scorer import Scorer
 from load_forecast.plotting import Plotting
+from optimization.generator_model_loader.model_loader import GeneratorModelLoader
 from ui.service_invoker import ServiceInvoker
 #from front.stream import Stream
 
@@ -25,19 +26,15 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         loadUi("ui/frontend.ui", self)
-        self.browseCSVButton.clicked.connect(self.browse_files)
-        self.browseModelButton.clicked.connect(self.browse_model)
-        self.saveButton.clicked.connect(self.write_to_database)
-        #self.trainButton.clicked.connect(self.start_ann_thread)
-        self.trainButton.clicked.connect(self.start_ann)
-        #self.loadModelButton.clicked.connect(self.load_model_for_prediction)
-        self.predictButton.clicked.connect(self.predict_power_consumption)
-        self.resultsButton.clicked.connect(self.filter_results)
+
+        self.button_connections()
 
         self.file = None
         self.loaded_model_name = ''
 
         self.service_invoker = ServiceInvoker()
+
+        generator_model = GeneratorModelLoader()
 
 
        # sys.stdout = Stream(newText=self.onUpdateText)
@@ -52,6 +49,17 @@ class MainWindow(QMainWindow):
     # def start_ann_thread(self):
     #     x = threading.Thread(target=self.start_ann)
     #     x.start()
+
+    def button_connections(self):
+        self.browseCSVButton.clicked.connect(self.browse_files)
+        self.browseModelButton.clicked.connect(self.browse_model)
+        self.saveButton.clicked.connect(self.write_to_database)
+        #self.trainButton.clicked.connect(self.start_ann_thread)
+        self.trainButton.clicked.connect(self.start_ann)
+        #self.loadModelButton.clicked.connect(self.load_model_for_prediction)
+        self.predictButton.clicked.connect(self.predict_power_consumption)
+        self.resultsButton.clicked.connect(self.filter_results)
+
 
     def onUpdateText(self, text):
         cursor = self.textedit.textCursor()

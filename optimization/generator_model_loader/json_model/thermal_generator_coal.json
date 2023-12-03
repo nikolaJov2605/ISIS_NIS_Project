@@ -1,0 +1,7 @@
+{
+    "min_power_production": 600.0,
+    "max_power_production": 825.0,
+    "generator_type": 1,
+    "fuel_consumption" : 0.9,
+    "co2_emission" : 40
+}

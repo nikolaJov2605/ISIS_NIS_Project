@@ -1,0 +1,5 @@
+{
+    "min_power_production": 300.0,
+    "max_power_production": 350.0,
+    "generator_type": 3
+}
