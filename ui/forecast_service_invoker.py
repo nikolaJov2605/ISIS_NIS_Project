@@ -10,7 +10,7 @@ from load_forecast.training.data_preparer import DataPreparer
 from load_forecast.training.model_loader import ModelLoader
 
 
-class ServiceInvoker:
+class ForecastServiceInvoker:
     def __init__(self) -> None:
         self.database_manager = DatabaseManager()
         self.ann_regression = AnnRegression()
