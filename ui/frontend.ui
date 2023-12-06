@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1082</width>
-    <height>747</height>
+    <height>998</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>10</x>
       <y>10</y>
       <width>1051</width>
-      <height>691</height>
+      <height>951</height>
      </rect>
     </property>
     <property name="font">
@@ -482,7 +482,7 @@
       <widget class="QPushButton" name="predictButton">
        <property name="geometry">
         <rect>
-         <x>160</x>
+         <x>350</x>
          <y>70</y>
          <width>341</width>
          <height>31</height>
@@ -538,27 +538,6 @@
        </property>
        <property name="maximum">
         <number>7</number>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="exportButton">
-       <property name="geometry">
-        <rect>
-         <x>530</x>
-         <y>70</y>
-         <width>341</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
-       <property name="text">
-        <string>Export</string>
        </property>
       </widget>
      </widget>
@@ -680,7 +659,7 @@
         <x>10</x>
         <y>370</y>
         <width>1031</width>
-        <height>281</height>
+        <height>521</height>
        </rect>
       </property>
       <property name="title">
@@ -865,7 +844,7 @@
          <x>10</x>
          <y>80</y>
          <width>1011</width>
-         <height>192</height>
+         <height>431</height>
         </rect>
        </property>
        <attribute name="horizontalHeaderCascadingSectionResizes">
@@ -875,23 +854,47 @@
         <bool>false</bool>
        </attribute>
       </widget>
+      <widget class="QPushButton" name="exportButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>840</x>
+         <y>30</y>
+         <width>181</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string>Export results</string>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="OptimizationTab">
      <attribute name="title">
       <string>Optimization</string>
      </attribute>
-     <widget class="QTabWidget" name="windPowerGenerationTable">
+     <widget class="QTabWidget" name="tabWidget1">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>10</y>
         <width>1021</width>
-        <height>631</height>
+        <height>341</height>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="thermal_coal_tab">
        <attribute name="title">
@@ -2173,13 +2176,13 @@
        <attribute name="title">
         <string>Wind Generator</string>
        </attribute>
-       <widget class="QTableWidget" name="solarPowerGenerationTable_2">
+       <widget class="QTableWidget" name="windPowerGenerationTable">
         <property name="geometry">
          <rect>
           <x>20</x>
           <y>70</y>
           <width>971</width>
-          <height>491</height>
+          <height>221</height>
          </rect>
         </property>
        </widget>
@@ -2634,6 +2637,164 @@
         </widget>
        </widget>
       </widget>
+     </widget>
+     <widget class="QTabWidget" name="reportTabWidget">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>400</y>
+        <width>961</width>
+        <height>291</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="load_report_tab">
+       <attribute name="title">
+        <string>Daily Load</string>
+       </attribute>
+       <widget class="QTableWidget" name="daily_load_report_table">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>941</width>
+          <height>201</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_23">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>220</y>
+          <width>81</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Daily load:</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="load_sum_lbl">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>220</y>
+          <width>131</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="thermal_coal_report_tab">
+       <attribute name="title">
+        <string>Thermal Coal Generator</string>
+       </attribute>
+       <widget class="QTableWidget" name="thermal_coal_report_table">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>941</width>
+          <height>241</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="thermal_gas_report_tab">
+       <attribute name="title">
+        <string>Thermal Gas Generator</string>
+       </attribute>
+       <widget class="QTableWidget" name="thermal_gas_report_table">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>941</width>
+          <height>241</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="hydro_report_tab">
+       <attribute name="title">
+        <string>Hydro Generator</string>
+       </attribute>
+       <widget class="QTableWidget" name="hydro_report_table">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>941</width>
+          <height>241</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="solar_report_tab">
+       <attribute name="title">
+        <string>Solar Generator</string>
+       </attribute>
+       <widget class="QTableWidget" name="solar_report_table">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>941</width>
+          <height>241</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="wind_report_tab">
+       <attribute name="title">
+        <string>Wind Generator</string>
+       </attribute>
+       <widget class="QTableWidget" name="wind_report_table">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>941</width>
+          <height>241</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>360</y>
+        <width>1011</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Reports</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
     </widget>
    </widget>

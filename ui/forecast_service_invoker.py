@@ -99,7 +99,6 @@ class ForecastServiceInvoker:
 
     def export_results(self, starting_date, ending_date):
         dataframe = self.database_manager.read_measures_from_database_by_time(starting_date, ending_date)
-        #df_new = df[['col1', 'col2']]
         time_load_dataframe = dataframe[["_time", "load"]]
         #exc_weather.to_csv('weather.csv', index=False)
         time_load_dataframe.to_csv('time_load.csv', index=False)
@@ -111,8 +110,18 @@ class ForecastServiceInvoker:
         read_data = self.database_manager.read_from_database('Results')
 
         return read_data
-    
+
+    def write_optimization_data(self, data):
+        write_data = self.database_manager.write_to_database(data, 'OptimizationDay')
+        if write_data == False:
+            raise Exception("Writing to database failed")
+
+        return self.preprocessed_data, True
 
     def filter_results(self, starting_date, ending_date):
         dataframe = self.database_manager.read_results_from_database_by_time(starting_date, ending_date)
         return dataframe
+    
+    def read_db_table(self, table_name):
+        table_data = self.database_manager.read_from_database(table_name)
+        return table_data

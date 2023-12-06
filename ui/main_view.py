@@ -68,6 +68,7 @@ class MainWindow(QMainWindow):
         #self.loadModelButton.clicked.connect(self.load_model_for_prediction)
         self.predictButton.clicked.connect(self.predict_power_consumption)
         self.resultsButton.clicked.connect(self.filter_results)
+        self.exportButton.clicked.connect(self.export_day_data_for_optimization)
 
 
     def onUpdateText(self, text):
@@ -176,6 +177,8 @@ class MainWindow(QMainWindow):
 
         self.populate_table(result_dataframe)
 
+        self.exportButton.setEnabled(True)
+
         # header = self.tableResults.horizontalHeader()
 
         # #header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
@@ -206,6 +209,26 @@ class MainWindow(QMainWindow):
 
         self.tableResults.horizontalHeader().setStretchLastSection(True)
         self.tableResults.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+    def export_day_data_for_optimization(self):
+        results = self.service_invoker.read_db_table('Results')
+
+        results['_time'] = pandas.to_datetime(results['_time'])
+        results['date_part'] = results['_time'].dt.date
+        min_date = results['date_part'].min()
+
+        min_date_df = results[results['date_part'] == min_date]
+
+        del min_date_df['date_part']
+
+        try:
+            self.service_invoker.write_optimization_data(min_date_df)
+        except Exception as e:
+            QMessageBox.critical(self, "Error", str(e), QMessageBox.Ok)
+            return
+
+        self.optimization_tab.populate_table('daily_load_report_table', min_date_df)
+        self.optimization_tab.calculate_daily_load()
 
     def __del__(self):
         sys.stdout = sys.__stdout__
