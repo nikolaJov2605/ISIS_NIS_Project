@@ -36,7 +36,7 @@ class MainWindow(QMainWindow):
 
         self.service_invoker = ForecastServiceInvoker()
 
-        generator_model = GeneratorModelLoader()
+        #generator_model = GeneratorModelLoader()
 
         # self.coal_generator_tab = CoalGeneratorTab(self.coal)
         self.optimization_tab = OptimizationTab(self.OptimizationTab)

@@ -1121,9 +1121,9 @@
          </rect>
         </property>
         <property name="title">
-         <string>Coal price</string>
+         <string>Coal CO2 cost</string>
         </property>
-        <widget class="QSlider" name="coal_price_slider1">
+        <widget class="QSlider" name="coal_co2_cost_slider1">
          <property name="geometry">
           <rect>
            <x>20</x>
@@ -1142,7 +1142,7 @@
           <enum>Qt::Vertical</enum>
          </property>
         </widget>
-        <widget class="QSlider" name="coal_price_slider2">
+        <widget class="QSlider" name="coal_co2_cost_slider2">
          <property name="geometry">
           <rect>
            <x>80</x>
@@ -1161,7 +1161,7 @@
           <enum>Qt::Vertical</enum>
          </property>
         </widget>
-        <widget class="QSlider" name="coal_price_slider3">
+        <widget class="QSlider" name="coal_co2_cost_slider3">
          <property name="geometry">
           <rect>
            <x>140</x>
@@ -1180,7 +1180,7 @@
           <enum>Qt::Vertical</enum>
          </property>
         </widget>
-        <widget class="QSlider" name="coal_price_slider4">
+        <widget class="QSlider" name="coal_co2_cost_slider4">
          <property name="geometry">
           <rect>
            <x>200</x>
@@ -1199,7 +1199,7 @@
           <enum>Qt::Vertical</enum>
          </property>
         </widget>
-        <widget class="QSlider" name="coal_price_slider5">
+        <widget class="QSlider" name="coal_co2_cost_slider5">
          <property name="geometry">
           <rect>
            <x>260</x>
@@ -1901,9 +1901,9 @@
          </rect>
         </property>
         <property name="title">
-         <string>Gas price</string>
+         <string>Gas CO2 cost</string>
         </property>
-        <widget class="QSlider" name="gas_price_slider1">
+        <widget class="QSlider" name="gas_co2_cost_slider1">
          <property name="geometry">
           <rect>
            <x>20</x>
@@ -1922,7 +1922,7 @@
           <enum>Qt::Vertical</enum>
          </property>
         </widget>
-        <widget class="QSlider" name="gas_price_slider2">
+        <widget class="QSlider" name="gas_co2_cost_slider2">
          <property name="geometry">
           <rect>
            <x>80</x>
@@ -1941,7 +1941,7 @@
           <enum>Qt::Vertical</enum>
          </property>
         </widget>
-        <widget class="QSlider" name="gas_price_slider3">
+        <widget class="QSlider" name="gas_co2_cost_slider3">
          <property name="geometry">
           <rect>
            <x>140</x>
@@ -1960,7 +1960,7 @@
           <enum>Qt::Vertical</enum>
          </property>
         </widget>
-        <widget class="QSlider" name="gas_price_slider4">
+        <widget class="QSlider" name="gas_co2_cost_slider4">
          <property name="geometry">
           <rect>
            <x>200</x>
@@ -1979,7 +1979,7 @@
           <enum>Qt::Vertical</enum>
          </property>
         </widget>
-        <widget class="QSlider" name="gas_price_slider5">
+        <widget class="QSlider" name="gas_co2_cost_slider5">
          <property name="geometry">
           <rect>
            <x>260</x>
@@ -2144,7 +2144,7 @@
           <x>20</x>
           <y>70</y>
           <width>971</width>
-          <height>491</height>
+          <height>231</height>
          </rect>
         </property>
        </widget>
@@ -2182,7 +2182,7 @@
           <x>20</x>
           <y>70</y>
           <width>971</width>
-          <height>221</height>
+          <height>231</height>
          </rect>
         </property>
        </widget>

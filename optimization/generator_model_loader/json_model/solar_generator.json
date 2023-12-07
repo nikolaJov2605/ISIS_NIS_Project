@@ -1,5 +1,7 @@
 {
     "min_power_production": 0,
     "max_power_production": 0,
+    "efficiency": 20,
+    "panel_size": 200,
     "generator_type": 4
 }

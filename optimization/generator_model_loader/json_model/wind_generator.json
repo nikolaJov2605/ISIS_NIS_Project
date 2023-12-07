@@ -1,5 +1,9 @@
 {
     "min_power_production": 0,
     "max_power_production": 0,
+    "cut_in_speed": 3,
+    "cut_out_speed": 25,
+    "blade_length": 40,
+    "efficiency": 60,
     "generator_type": 4
 }
