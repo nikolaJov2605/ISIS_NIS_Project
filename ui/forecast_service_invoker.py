@@ -3,6 +3,7 @@ import time
 import pandas
 from database.database_manager import DatabaseManager
 from load_forecast.data_converter import DataConverter
+from load_forecast.data_preparation.solar_radiation_preparation import SolarRadiationPreparation
 from load_forecast.plotting import Plotting
 from load_forecast.scorer import Scorer
 from load_forecast.training.ann_regression import AnnRegression
@@ -17,6 +18,10 @@ class ForecastServiceInvoker:
 
         self.preprocessed_data = pandas.DataFrame()
 
+    def preprocess_radiation_data(self):
+        srp = SolarRadiationPreparation()
+        radiation_df = srp.preprocess_radiation_data()
+        return radiation_df
 
     def preprocess_data(self, path_to_data):
         data_converter = DataConverter(path_to_data)
@@ -36,10 +41,15 @@ class ForecastServiceInvoker:
 
     def write_data_to_database(self, path_to_data):
         self.preprocess_data(path_to_data)
+        solar_radiation_data = self.preprocess_radiation_data()
 
         write_data = self.database_manager.write_to_database(self.preprocessed_data, 'Measures')
         if write_data == False:
-            raise Exception("Writing to database failed")
+            raise Exception("Writing measurment data to database failed")
+
+        write_radiation_data = self.database_manager.write_to_database(solar_radiation_data, 'SolarRadiation')
+        if write_data == False:
+            raise Exception("Writing solar radiation data to database failed")
 
         return self.preprocessed_data, True
 

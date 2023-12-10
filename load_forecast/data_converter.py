@@ -1,5 +1,6 @@
 import pandas
 import numpy
+from load_forecast.data_preparation.solar_radiation_preparation import SolarRadiationPreparation
 from load_forecast.data_preparation.time_preparation import TimePreparer
 from load_forecast.data_preparation.weather_preparation import WeatherPreparer
 from load_forecast.data_preparation.load_preparation import LoadPreparer
@@ -72,7 +73,6 @@ class DataConverter:
         #exc_load.to_csv('load.csv', index=False)
 
 
-
         # --------------------------- MEARGED COLLECTIONS --------------------------- #
 
         measures = pandas.merge(exc_weather, exc_load, on='_time', how='left')
@@ -88,5 +88,4 @@ class DataConverter:
 
         return measures
 
-        # --------------------------------------------------------------------------- #
-
+        # -------------------------------------------------------------------------- #
