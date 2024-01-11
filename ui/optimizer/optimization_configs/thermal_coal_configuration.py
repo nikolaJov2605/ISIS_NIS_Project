@@ -1,5 +1,10 @@
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget, QSlider, QLabel
+from PyQt5.QtWidgets import QWidget, QSlider, QLabel, QPushButton
+from matplotlib import pyplot as plt
+
+from optimization.function_aproximation import FunctionAproximation
+
+import numpy as np
 
 class ThermalCoalConfiguration():
     def __init__(self, tab) -> None:
@@ -7,10 +12,14 @@ class ThermalCoalConfiguration():
         self.initialize_coal_consumption_elements(tab)
         self.initialize_coal_price_elements(tab)
         self.initialize_coal_co2_emission_elements(tab)
+        self.initialize_buttons(tab)
 
         self.update_lbl_values()
 
         self.slider_change_connections()
+        self.button_connections()
+
+        self.aproximation = FunctionAproximation()
 
 
     def initialize_coal_consumption_elements(self, tab):
@@ -52,6 +61,9 @@ class ThermalCoalConfiguration():
         self.coal_co2_emission_slider_lbl4 = tab.findChild(QLabel, 'coal_co2_emission_slider_lbl4')
         self.coal_co2_emission_slider_lbl5 = tab.findChild(QLabel, 'coal_co2_emission_slider_lbl5')
 
+    def initialize_buttons(self, tab: QWidget):
+        self.aproximation_btn: QPushButton = tab.findChild(QPushButton, 'aproximation_btn')
+
 
     def slider_change_connections(self):
         self.coal_consumption_slider1.valueChanged.connect(self.update_lbl_values)
@@ -71,6 +83,30 @@ class ThermalCoalConfiguration():
         self.coal_co2_emission_slider3.valueChanged.connect(self.update_lbl_values)
         self.coal_co2_emission_slider4.valueChanged.connect(self.update_lbl_values)
         self.coal_co2_emission_slider5.valueChanged.connect(self.update_lbl_values)
+
+    def button_connections(self):
+        self.aproximation_btn.clicked.connect(self.do_aproximation)
+
+    def do_aproximation(self):
+        x = [0, 1, 2, 3, 4]
+        y = self.return_consumption_values()
+        array = []
+        for i in range(5):
+            array.append((x[i], y[i]))
+
+
+        ret_func = self.aproximation.quadratic_aproximation(array)
+
+        plt.scatter(*zip(*array), label='Initial points')
+        x_test = np.linspace(0, 4, 300)
+        plt.plot(x_test, ret_func(x_test), 'r', label='Aproximation')
+
+
+        plt.legend()
+        plt.xlabel('P[MW]')
+        plt.ylabel('c[$/MW]')
+        plt.show()
+
 
 
     def update_lbl_values(self):

@@ -894,7 +894,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="thermal_coal_tab">
        <attribute name="title">
@@ -1486,6 +1486,19 @@
           <set>Qt::AlignCenter</set>
          </property>
         </widget>
+       </widget>
+       <widget class="QPushButton" name="aproximation_btn">
+        <property name="geometry">
+         <rect>
+          <x>140</x>
+          <y>10</y>
+          <width>141</width>
+          <height>28</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Aproximation</string>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="thermal_gas_tab">
@@ -2654,7 +2667,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="load_report_tab">
        <attribute name="title">

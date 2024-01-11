@@ -7,4 +7,6 @@
 3. Solar radiation dataset?
     - set podataka ne sadrzi podatke o solarnoj radijaciji, nisam se snasao kako da ga izracunam zbog nedostatka podataka...
 
+4. Cost/price za hidroelektrane?
+
 3. Odbrana? Test?
