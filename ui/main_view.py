@@ -36,7 +36,8 @@ class MainWindow(QMainWindow):
 
         self.service_invoker = ForecastServiceInvoker()
 
-        #generator_model = GeneratorModelLoader()
+        generator_model = GeneratorModelLoader()
+        generator_model.load_generator_models()
 
         # self.coal_generator_tab = CoalGeneratorTab(self.coal)
         self.optimization_tab = OptimizationTab(self.OptimizationTab)
@@ -227,6 +228,7 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "Error", str(e), QMessageBox.Ok)
             return
 
+        self.optimization_tab.optimization_date = min_date
         self.optimization_tab.populate_table('daily_load_report_table', min_date_df)
         self.optimization_tab.calculate_daily_load()
 

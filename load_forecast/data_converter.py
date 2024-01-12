@@ -15,36 +15,6 @@ class DataConverter:
     def load_and_convert_data(self):
         # ----------------------------- WEATHER COLLECTION ----------------------------- #
 
-        # Local time    - date and time
-    ##### FEELS LIKE TEMPERATURE TO CALCULATE AND ADD
-    ##### T             - air temperature - temperatura vazduha (U STEPENIMA CELZIJUSA)
-    ##### Po            - Atmpspheric Pressure (milimeters of mercury) - VAZDUSNI PRITISAK (U MILIMETRIMA ZIVE)
-        # Pa            - Pressure tendency: changes in atmospheric pressure over last three hours (milimeters of mercury)
-        # P             - ?
-        # U             - relative humidity (%)
-    ##### DD            - mean wind direction (compass point) - PRAVAC VETRA (MOZDA IZRACUNATI U STEPENIMA)
-        # Ff            - mean wind speed (meters per second)
-    ##### ff10          - maximum gust value over 10-minutes period (meters per second) - NALETI VETRA U METRIMA PO SEKUNDI
-    ##### ff3           - maximum gust value between periods of observation
-        # N             - total cloud cover
-    ##### WW            - presend weather reported from the weather station - TEKSTUALNI OPIS VREMENA
-        # W1            - past weather 1
-        # W2            - past weather 2
-        # Tn            - minimum air temperature during the period (not exceeding 12 hours)
-        # Tx            - maximum air temperature during the past period (not exceeding 12 hours)
-        # Cl            - clouds of the hemera stratocumulus, stratus, cu,ulus and cumulonimbus
-        # Nh            - amount of the CL cloud present or, if no CL cloud is present, the amount of the CM cloud present
-        # H             - height of the base of base of the lowest cloud (m)
-        # Cm            - clouds of the genera altocu,ulus, altrostratus and nimbostratus
-        # Ch            - clouds of the genera cirrus, cirrocumulus and cirrostratus
-        # VV            - horizontal visibility (km)
-    ##### Td            - dewpoint temperature (degrees celsius) - TEMPERATURA ROSE
-    ##### RRR           - amount of precipitation (milimeters) - PADAVINE U MILIMETRIMA
-        # tR            - the period of time during which the specified amount of precipitation was accumulated
-        # E             - state of the ground without snow or measurable ice cover
-        # Tg            - the minimum soil surface temperature at night (degrees celsius)
-        # E'            - state of the ground with snow or measurable ice cover
-        # sss           - snow dept (cm)
 
 
         #TEMPERATURE, WINDSPEED, HUMIDITY, CLOUDCOVER

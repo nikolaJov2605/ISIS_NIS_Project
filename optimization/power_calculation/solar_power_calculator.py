@@ -1,3 +1,5 @@
+from datetime import timedelta
+from database.database_manager import DatabaseManager
 from optimization.generator_model_loader.model_loader import GeneratorModelLoader
 
 import pandas
@@ -8,20 +10,32 @@ LATITUDE = 44.2107675
 LONGITUDE = 20.9224158
 
 class SolarPowerCalculator:
-    def __init__(self, generator_count: int, solar_radiation_data) -> None:
+    def __init__(self, generator_count, optimization_date) -> None:
         self.solar_generator = GeneratorModelLoader.solar_genereator
+        self.database_manager = DatabaseManager()
         self.generator_count = generator_count
 
         # south oriented, 30 degrees angle
-        self.solar_radiation_data = solar_radiation_data
+        self.solar_radiation_data = self.load_solar_data(optimization_date)
 
     def calculate_hourly_power(self):
         hourly_power = []
 
         for solar_irradiance in self.solar_radiation_data['irradiance']:
-            power = solar_irradiance * (self.solar_generator.efficiency / 100) * self.solar_generator.sum_panel_size
+            power = solar_irradiance * (self.solar_generator.efficiency / 100) * self.solar_generator.sum_panel_size * self.generator_count
             power_in_mw = power / 1_000_000
             hourly_power.append(power_in_mw)
+
+        return hourly_power
+
+
+    def load_solar_data(self, optimization_date):
+        #optimization_date =optimization_date.dateTime().toPyDateTime()
+        length_in_days = 1
+        ending_date = optimization_date + timedelta(days=length_in_days - 1)
+        dataframe = self.database_manager.read_solar_radiation_from_database_by_time(optimization_date, ending_date)
+        #ret_df = dataframe[['time', 'irradiance']]
+        return dataframe
 
     # def calculate_solar_generator_hourly_power(self, start_date, end_date):
     #     solar_irradiance = self.calculate_solar_irradiance(start_date, end_date)

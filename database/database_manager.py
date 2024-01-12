@@ -37,7 +37,7 @@ class DatabaseManager():
 
         df = pandas.read_sql_query(query, con=self.engine)
         return df
-    
+
     def read_results_from_database_by_time(self, starting_time, ending_time):
         #ending_time = datetime.strptime(ending_time, '%Y-%m-%d')
         starting_time = starting_time.strftime('%Y-%m-%d')
@@ -49,5 +49,14 @@ class DatabaseManager():
         df = pandas.read_sql_query(query, con=self.engine)
         return df
 
+    def read_solar_radiation_from_database_by_time(self, starting_time, ending_time):
+        starting_time = starting_time.strftime('%Y-%m-%d')
+        ending_time = ending_time + timedelta(days=1)
+        ending_time = ending_time.strftime('%Y-%m-%d')
+        params = [starting_time, ending_time]
+        query = "SELECT * from SolarRadiation WHERE time >= '{param0}' and time < '{param1}'".format(param0=params[0], param1=params[1])
+
+        df = pandas.read_sql_query(query, con=self.engine)
+        return df
 
 

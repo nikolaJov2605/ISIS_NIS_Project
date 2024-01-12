@@ -1,7 +1,8 @@
 import pandas
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget, QSlider, QLabel, QTableWidget, QTableWidgetItem, QHeaderView
+from PyQt5.QtWidgets import QWidget, QSlider, QLabel, QTableWidget, QTableWidgetItem, QHeaderView, QPushButton
+from optimization.simplex_invoker import SimplexInvoker
 from ui.optimizer.optimization_configs.hydro_configuration import HydroConfiguration
 from ui.optimizer.optimization_configs.optimization_config import OptimizationConfiguration
 from ui.optimizer.optimization_configs.solar_configuration import SolarConfiguration
@@ -14,9 +15,11 @@ class OptimizationTab():
     def __init__(self, tab: QWidget) -> None:
         #super(OptimizationTab, self).__init__()
         self.tab = tab
+        self.optimization_date = None
 
         self.init_config_tabs()
         self.init_report_tables()
+        self.init_buttons()
 
 
         self.thermal_coal_config = ThermalCoalConfiguration(self.thermal_coal_tab)
@@ -25,6 +28,9 @@ class OptimizationTab():
         self.solar_config = SolarConfiguration(self.solar_generator_tab)
         self.wind_config = WindConfiguration(self.wind_generator_tab)
         self.optimization_config = OptimizationConfiguration(self.optimize_tab)
+
+        # optimization trigger
+        self.optimization_btn.clicked.connect(self.optimize)
 
 
 
@@ -47,6 +53,9 @@ class OptimizationTab():
         self.hydro_report_table = self.tab.findChild(QTableWidget, 'hydro_report_table')
         self.solar_report_table = self.tab.findChild(QTableWidget, 'solar_report_table')
         self.wind_report_table = self.tab.findChild(QTableWidget, 'wind_report_table')
+
+    def init_buttons(self):
+        self.optimization_btn = self.tab.findChild(QPushButton, 'optimization_btn')
 
 
 
@@ -93,3 +102,26 @@ class OptimizationTab():
 
         df = pandas.DataFrame(data, columns=headers)
         return df
+
+
+    def optimize(self):
+        thermal_coal_generator_count = self.optimization_config.coal_generator_cnt_box.value()
+        thermal_gas_generator_count = self.optimization_config.gas_generator_cnt_box.value()
+        hydro_generator_count = self.optimization_config.hydro_generator_cnt_box.value()
+        solar_generator_count = self.optimization_config.solar_generator_cnt_box.value()
+        wind_generator_count = self.optimization_config.wind_generator_cnt_box.value()
+
+        cost_weight_factor = self.optimization_config.cost_optimization_percent_box.value()
+        co2_emission_weight_factor = self.optimization_config.co2_emission_optimization_percent_box.value()
+
+        coal_price_per_tone = self.optimization_config.coal_price_box.value()
+        gas_price_per_tone = self.optimization_config.gas_price_box.value()
+
+        optimization_date = self.optimization_date
+
+        if optimization_date == None:
+            return
+
+        simplex_invoker = SimplexInvoker(thermal_coal_generator_count, thermal_gas_generator_count, hydro_generator_count, wind_generator_count, solar_generator_count,
+                                         cost_weight_factor, co2_emission_weight_factor, coal_price_per_tone, gas_price_per_tone, optimization_date)
+        return

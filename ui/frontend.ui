@@ -29,7 +29,7 @@
      </font>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="iconSize">
      <size>
@@ -442,9 +442,9 @@
          <hour>0</hour>
          <minute>0</minute>
          <second>0</second>
-         <year>2016</year>
-         <month>1</month>
-         <day>1</day>
+         <year>2019</year>
+         <month>5</month>
+         <day>5</day>
         </datetime>
        </property>
        <property name="minimumDateTime">
@@ -890,7 +890,7 @@
         <x>10</x>
         <y>10</y>
         <width>1021</width>
-        <height>341</height>
+        <height>291</height>
        </rect>
       </property>
       <property name="currentIndex">
@@ -2123,14 +2123,20 @@
        <widget class="QLabel" name="label_10">
         <property name="geometry">
          <rect>
-          <x>290</x>
+          <x>300</x>
           <y>120</y>
-          <width>55</width>
+          <width>41</width>
           <height>21</height>
          </rect>
         </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
         <property name="text">
          <string>Cost:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
        <widget class="QDoubleSpinBox" name="hydro_cost_box">
@@ -2144,6 +2150,35 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="hydro_co2_emission_box">
+        <property name="geometry">
+         <rect>
+          <x>350</x>
+          <y>150</y>
+          <width>331</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_24">
+        <property name="geometry">
+         <rect>
+          <x>220</x>
+          <y>150</y>
+          <width>121</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>CO2 emission:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </widget>
@@ -2572,7 +2607,7 @@
          </rect>
         </property>
         <property name="title">
-         <string>Fuel Price</string>
+         <string>Fuel Price ($/t)</string>
         </property>
         <widget class="QLabel" name="label_21">
          <property name="geometry">
@@ -2667,7 +2702,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="load_report_tab">
        <attribute name="title">
@@ -2803,10 +2838,23 @@
        </font>
       </property>
       <property name="text">
-       <string>Reports</string>
+       <string>Report</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="optimization_btn">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>300</y>
+        <width>431</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Optimize</string>
       </property>
      </widget>
     </widget>

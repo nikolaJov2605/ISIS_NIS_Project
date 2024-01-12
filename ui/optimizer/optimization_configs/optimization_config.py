@@ -14,11 +14,11 @@ class OptimizationConfiguration:
 
 
     def init_generator_counts(self, tab: QWidget):
-        self.coal_generator_cnt_box: QDoubleSpinBox = tab.findChild(QDoubleSpinBox, 'coal_generator_cnt_box')
-        self.gas_generator_cnt_box: QDoubleSpinBox = tab.findChild(QDoubleSpinBox, 'gas_generator_cnt_box')
-        self.hydro_generator_cnt_box: QDoubleSpinBox = tab.findChild(QDoubleSpinBox, 'hydro_generator_cnt_box')
-        self.solar_generator_cnt_box: QDoubleSpinBox = tab.findChild(QDoubleSpinBox, 'solar_generator_cnt_box')
-        self.wind_generator_cnt_box: QDoubleSpinBox = tab.findChild(QDoubleSpinBox, 'wind_generator_cnt_box')
+        self.coal_generator_cnt_box: QSpinBox = tab.findChild(QSpinBox, 'coal_generator_cnt_box')
+        self.gas_generator_cnt_box: QSpinBox = tab.findChild(QSpinBox, 'gas_generator_cnt_box')
+        self.hydro_generator_cnt_box: QSpinBox = tab.findChild(QSpinBox, 'hydro_generator_cnt_box')
+        self.solar_generator_cnt_box: QSpinBox = tab.findChild(QSpinBox, 'solar_generator_cnt_box')
+        self.wind_generator_cnt_box: QSpinBox = tab.findChild(QSpinBox, 'wind_generator_cnt_box')
 
     def init_optimization_weight_factors(self, tab: QWidget):
         self.cost_optimization_percent_box: QSpinBox = tab.findChild(QSpinBox, 'cost_optimization_percent_box')

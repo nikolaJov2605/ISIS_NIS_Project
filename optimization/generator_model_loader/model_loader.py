@@ -8,34 +8,34 @@ from optimization.generator_model.wind_generator import WindGenerator
 
 
 class GeneratorModelLoader():
+    thermal_generator_coal = None
+    thermal_generator_gas = None
+    hydro_generator = None
+    solar_genereator = None
+    wind_generator = None
 
     def __init__(self) -> None:
-        thermal_generator_coal = None
-        thermal_generator_gas = None
-        hydro_generator = None
-        solar_genereator = None
-        wind_generator = None
-        #self.load_generator_models()
+        pass
 
     @staticmethod
-    def get_thermal_generator_coal(self):
-        return self.thermal_generator_coal
+    def get_thermal_generator_coal():
+        return GeneratorModelLoader.thermal_generator_coal
 
     @staticmethod
-    def get_thermal_generator_gas(self):
-        return self.thermal_generator_gas
+    def get_thermal_generator_gas():
+        return GeneratorModelLoader.thermal_generator_gas
 
     @staticmethod
-    def get_hydro_generator(self):
-        return self.hydro_generator
+    def get_hydro_generator():
+        return GeneratorModelLoader.hydro_generator
 
     @staticmethod
-    def get_solar_generator(self):
-        return self.solar_genereator
+    def get_solar_generator():
+        return GeneratorModelLoader.solar_genereator
 
     @staticmethod
-    def get_wind_generator(self):
-        return self.wind_generator
+    def get_wind_generator():
+        return GeneratorModelLoader.wind_generator
 
     def load_generator_models(self):
         coal_gen_params = self.load_generators_from_json('D:/Fakultet/Master/Inteligentni softverski infrastrukturni sistemi/Projekat/ISIS_NIS_Project/optimization/generator_model_loader/json_model/thermal_generator_coal.json')
