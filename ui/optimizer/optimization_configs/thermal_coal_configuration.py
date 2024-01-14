@@ -90,8 +90,9 @@ class ThermalCoalConfiguration():
         self.aproximation_btn.clicked.connect(self.do_aproximation)
 
     def do_aproximation(self):
-        x = [0, 1, 2, 3, 4]
-        y = self.return_co2_cost_values()
+        max_generator_power = GeneratorModelLoader.get_thermal_generator_coal().max_power_production
+        x = [0.2 * max_generator_power, 0.4 * max_generator_power, 0.6 * max_generator_power, 0.8 * max_generator_power, 1 * max_generator_power]
+        y = self.return_co2_emission_values()
         array = []
         for i in range(5):
             array.append((x[i], y[i]))
@@ -100,7 +101,7 @@ class ThermalCoalConfiguration():
         ret_func = self.aproximation.quadratic_aproximation(array)
 
         plt.scatter(*zip(*array), label='Initial points')
-        x_test = np.linspace(0, 4, 300)
+        x_test = np.linspace(0, max_generator_power, 300)
         plt.plot(x_test, ret_func(x_test), 'r', label='Aproximation')
 
 

@@ -29,7 +29,7 @@
      </font>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="iconSize">
      <size>
@@ -894,7 +894,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="thermal_coal_tab">
        <attribute name="title">
@@ -2834,7 +2834,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="load_report_tab">
        <attribute name="title">
@@ -2877,11 +2877,11 @@
         </property>
        </widget>
       </widget>
-      <widget class="QWidget" name="thermal_coal_report_tab">
+      <widget class="QWidget" name="optimization_report_tab">
        <attribute name="title">
-        <string>Thermal Coal Generator</string>
+        <string>Generator Load</string>
        </attribute>
-       <widget class="QTableWidget" name="thermal_coal_report_table">
+       <widget class="QTableWidget" name="load_report_table">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -2892,61 +2892,31 @@
         </property>
        </widget>
       </widget>
-      <widget class="QWidget" name="thermal_gas_report_tab">
+      <widget class="QWidget" name="generator_cost_tab">
        <attribute name="title">
-        <string>Thermal Gas Generator</string>
+        <string>Generator CO2 Cost ?</string>
        </attribute>
-       <widget class="QTableWidget" name="thermal_gas_report_table">
+       <widget class="QTableWidget" name="cost_report_table">
         <property name="geometry">
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>941</width>
+          <width>1001</width>
           <height>241</height>
          </rect>
         </property>
        </widget>
       </widget>
-      <widget class="QWidget" name="hydro_report_tab">
+      <widget class="QWidget" name="generator_co2_emission_tab">
        <attribute name="title">
-        <string>Hydro Generator</string>
+        <string>Generator CO2 emission</string>
        </attribute>
-       <widget class="QTableWidget" name="hydro_report_table">
+       <widget class="QTableWidget" name="co2_emission_report_table">
         <property name="geometry">
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>941</width>
-          <height>241</height>
-         </rect>
-        </property>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="solar_report_tab">
-       <attribute name="title">
-        <string>Solar Generator</string>
-       </attribute>
-       <widget class="QTableWidget" name="solar_report_table">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>10</y>
-          <width>941</width>
-          <height>241</height>
-         </rect>
-        </property>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="wind_report_tab">
-       <attribute name="title">
-        <string>Wind Generator</string>
-       </attribute>
-       <widget class="QTableWidget" name="wind_report_table">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>10</y>
-          <width>941</width>
+          <width>1001</width>
           <height>241</height>
          </rect>
         </property>
@@ -2958,7 +2928,7 @@
        <rect>
         <x>10</x>
         <y>360</y>
-        <width>1011</width>
+        <width>1021</width>
         <height>31</height>
        </rect>
       </property>
@@ -2979,9 +2949,9 @@
      <widget class="QPushButton" name="optimization_btn">
       <property name="geometry">
        <rect>
-        <x>310</x>
-        <y>300</y>
-        <width>431</width>
+        <x>300</x>
+        <y>320</y>
+        <width>441</width>
         <height>31</height>
        </rect>
       </property>

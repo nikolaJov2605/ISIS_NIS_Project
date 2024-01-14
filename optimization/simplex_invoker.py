@@ -1,6 +1,7 @@
 
 
 
+import pandas
 from database.database_manager import DatabaseManager
 from optimization.function_aproximation import FunctionAproximation
 from optimization.generator_model_loader.model_loader import GeneratorModelLoader
@@ -83,16 +84,16 @@ class SimplexInvoker:
         return ret_func
 
     def start_optimization(self):
-        coal_consumption_function = self.do_aproximation(self.coal_counsumption_values, GeneratorModelLoader.get_thermal_generator_coal().max_power_production)
-        coal_co2_emission_function = self.do_aproximation(self.coal_co2_emission_values, GeneratorModelLoader.get_thermal_generator_coal().max_power_production)
-        coal_co2_cost_function = self.do_aproximation(self.coal_co2_cost_values, GeneratorModelLoader.get_thermal_generator_coal().max_power_production)
+        self.coal_consumption_function = self.do_aproximation(self.coal_counsumption_values, GeneratorModelLoader.get_thermal_generator_coal().max_power_production)
+        self.coal_co2_emission_function = self.do_aproximation(self.coal_co2_emission_values, GeneratorModelLoader.get_thermal_generator_coal().max_power_production)
+        self.coal_co2_cost_function = self.do_aproximation(self.coal_co2_cost_values, GeneratorModelLoader.get_thermal_generator_coal().max_power_production)
 
-        gas_consumption_function = self.do_aproximation(self.gas_counsumption_values, GeneratorModelLoader.get_thermal_generator_gas().max_power_production)
-        gas_co2_emission_function = self.do_aproximation(self.gas_co2_emission_values, GeneratorModelLoader.get_thermal_generator_gas().max_power_production)
-        gas_co2_cost_function = self.do_aproximation(self.gas_co2_cost_values, GeneratorModelLoader.get_thermal_generator_gas().max_power_production)
+        self.gas_consumption_function = self.do_aproximation(self.gas_counsumption_values, GeneratorModelLoader.get_thermal_generator_gas().max_power_production)
+        self.gas_co2_emission_function = self.do_aproximation(self.gas_co2_emission_values, GeneratorModelLoader.get_thermal_generator_gas().max_power_production)
+        self.gas_co2_cost_function = self.do_aproximation(self.gas_co2_cost_values, GeneratorModelLoader.get_thermal_generator_gas().max_power_production)
 
-        hydro_co2_emission_const = self.hydro_co2_emission_value
-        hydro_co2_cost_const = self.hydro_co2_cost_value
+        self.hydro_co2_emission_const = self.hydro_co2_emission_value
+        self.hydro_co2_cost_const = self.hydro_co2_cost_value
 
         simplex = Simplex()
 
@@ -102,15 +103,15 @@ class SimplexInvoker:
 
             coal_hourly_power, gas_hourly_power, hydro_hourly_power = simplex.do_optimization(self.thermal_coal_generator_count, self.thermal_gas_generator_count, self.hydro_generator_count, self.wind_generator_count, self.solar_generator_count,
                     self.cost_weight_factor, self.co2_emission_weight_factor, self.coal_price_per_tone, self.gas_price_per_tone,
-                    coal_consumption_function, coal_co2_emission_function, coal_co2_cost_function,
-                    gas_consumption_function, gas_co2_emission_function, gas_co2_cost_function,
-                    hydro_co2_emission_const, hydro_co2_cost_const,
+                    self.coal_consumption_function,self. coal_co2_emission_function, self.coal_co2_cost_function,
+                    self.gas_consumption_function, self.gas_co2_emission_function, self.gas_co2_cost_function,
+                    self.hydro_co2_emission_const, self.hydro_co2_cost_const,
                     hourly_target_load)
             self.coal_generator_hourly_load.append(coal_hourly_power)
             self.gas_generator_hourly_load.append(gas_hourly_power)
             self.hydro_generator_hourly_load.append(hydro_hourly_power)
 
-    def load_optimization_report(self):
+    def load_optimization_report_load(self):
         ret_datarame = self.database_manager.read_from_database('Results')
         ret_datarame['coal_generator_load'] = self.coal_generator_hourly_load
         ret_datarame['gas_generator_load'] = self.gas_generator_hourly_load
@@ -119,6 +120,44 @@ class SimplexInvoker:
         ret_datarame['solar_generator_load'] = self.solar_generator_hourly_load
 
         return ret_datarame
+    
+    def load_optimization_report_cost(self):
+        ret_dataframe = pandas.DataFrame()
+        coal_co2_cost = []
+        gas_co2_cost = []
+        hydro_co2_cost = []
+        for load in self.coal_generator_hourly_load:
+            coal_co2_cost.append(self.coal_co2_cost_function(load))
+        for load in self.gas_generator_hourly_load:
+            gas_co2_cost.append(self.gas_co2_cost_function(load))
+        for load in self.hydro_generator_hourly_load:
+            hydro_co2_cost.append(self.hydro_co2_cost_const)
+
+        ret_dataframe['coal_generator_cost'] = coal_co2_cost
+        ret_dataframe['gas_generator_cost'] = gas_co2_cost
+        ret_dataframe['hydro_generator_cost'] = hydro_co2_cost
+
+        return ret_dataframe
+    
+    def load_optimization_report_co2_emission(self):
+        ret_dataframe = pandas.DataFrame()
+        coal_co2_emission = []
+        gas_co2_emission = []
+        hydro_co2_emission = []
+
+        for load in self.coal_generator_hourly_load:
+            coal_co2_emission.append(self.coal_co2_emission_function(load))
+        for load in self.gas_generator_hourly_load:
+            gas_co2_emission.append(self.gas_co2_emission_function(load))
+        for load in self.hydro_generator_hourly_load:
+            hydro_co2_emission.append(self.hydro_co2_cost_const)
+
+        ret_dataframe['coal_co2_emission'] = coal_co2_emission
+        ret_dataframe['gas_co2_emission'] = gas_co2_emission
+        ret_dataframe['hydro_co2_emission'] = hydro_co2_emission
+
+        return ret_dataframe
+    
 
         #plt.scatter(*zip(*array), label='Initial points')
         #x_test = np.linspace(0, 4, 300)
