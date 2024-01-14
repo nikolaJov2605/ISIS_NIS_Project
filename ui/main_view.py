@@ -17,7 +17,7 @@ from load_forecast.training.ann_regression import AnnRegression
 from load_forecast.scorer import Scorer
 from load_forecast.plotting import Plotting
 from optimization.generator_model_loader.model_loader import GeneratorModelLoader
-from ui.forecast_service_invoker import ForecastServiceInvoker
+from load_forecast.forecast_service_invoker import ForecastServiceInvoker
 from ui.optimizer.optimization_tab import OptimizationTab
 from ui.optimizer.optimization_configs.thermal_coal_configuration import ThermalCoalConfiguration
 #from front.stream import Stream
