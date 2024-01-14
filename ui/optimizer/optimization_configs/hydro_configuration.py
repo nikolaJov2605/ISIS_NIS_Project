@@ -6,7 +6,7 @@ class HydroConfiguration:
         self.hydro_co2_emission_box = tab.findChild(QDoubleSpinBox, 'hydro_co2_emission_box')
 
     def get_hydro_cost(self):
-        return self.hydro_cost_box
+        return self.hydro_cost_box.value()
 
-    def get_hydro_co2_emission_box(self):
-        return self.hydro_co2_emission_box
+    def get_hydro_co2_emission(self):
+        return self.hydro_co2_emission_box.value()

@@ -101,7 +101,7 @@ class ThermalGasConfiguration():
             self.gas_consumption_slider5.value()
         ]
 
-    def return_price_values(self):
+    def return_co2_cost_values(self):
         return [
             self.gas_co2_cost_slider1.value(),
             self.gas_co2_cost_slider2.value(),

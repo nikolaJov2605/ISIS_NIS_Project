@@ -119,9 +119,29 @@ class OptimizationTab():
 
         optimization_date = self.optimization_date
 
+        coal_counsumption_values = self.thermal_coal_config.return_consumption_values()
+        coal_co2_emission_values = self.thermal_coal_config.return_co2_emission_values()
+        coal_co2_cost_values = self.thermal_coal_config.return_co2_cost_values()
+
+        gas_counsumption_values = self.thermal_gas_config.return_consumption_values()
+        gas_co2_emission_values = self.thermal_gas_config.return_co2_emission_values()
+        gas_co2_cost_values = self.thermal_gas_config.return_co2_cost_values()
+
+        hydro_co2_emission_value = self.hydro_config.get_hydro_co2_emission()
+        hydro_co2_cost_value = self.hydro_config.get_hydro_cost()
+
+
         if optimization_date == None:
             return
 
         simplex_invoker = SimplexInvoker(thermal_coal_generator_count, thermal_gas_generator_count, hydro_generator_count, wind_generator_count, solar_generator_count,
-                                         cost_weight_factor, co2_emission_weight_factor, coal_price_per_tone, gas_price_per_tone, optimization_date)
+                                         cost_weight_factor, co2_emission_weight_factor, coal_price_per_tone, gas_price_per_tone, optimization_date,
+                                         coal_counsumption_values, coal_co2_emission_values, coal_co2_cost_values, gas_counsumption_values, gas_co2_emission_values, gas_co2_cost_values,
+                                         hydro_co2_emission_value, hydro_co2_cost_value)
+
+        simplex_invoker.start_optimization()
+
+        report_data = simplex_invoker.load_optimization_report()
+        self.populate_table('thermal_coal_report_table', report_data)
+
         return

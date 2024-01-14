@@ -137,7 +137,7 @@ class ThermalCoalConfiguration():
             self.coal_consumption_slider5.value()
         ]
 
-    def return_price_values(self):
+    def return_co2_cost_values(self):
         return [
             self.coal_co2_cost_slider1.value(),
             self.coal_co2_cost_slider2.value(),

@@ -3,5 +3,5 @@
     "max_power_production": 0,
     "efficiency": 20,
     "sum_panel_size": 200,
-    "generator_type": 4
+    "generator_type": 5
 }
