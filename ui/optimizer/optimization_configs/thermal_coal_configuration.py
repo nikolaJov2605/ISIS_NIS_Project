@@ -6,6 +6,8 @@ from optimization.function_aproximation import FunctionAproximation
 
 import numpy as np
 
+from optimization.generator_model_loader.model_loader import GeneratorModelLoader
+
 class ThermalCoalConfiguration():
     def __init__(self, tab) -> None:
 
@@ -89,7 +91,7 @@ class ThermalCoalConfiguration():
 
     def do_aproximation(self):
         x = [0, 1, 2, 3, 4]
-        y = self.return_consumption_values()
+        y = self.return_co2_cost_values()
         array = []
         for i in range(5):
             array.append((x[i], y[i]))
@@ -129,12 +131,13 @@ class ThermalCoalConfiguration():
         self.coal_co2_emission_slider_lbl5.setText(str(self.coal_co2_emission_slider5.value()))
 
     def return_consumption_values(self):
+        max_coal_consumption = GeneratorModelLoader.get_thermal_generator_coal().max_fuel_consumption
         return [
-            self.coal_consumption_slider1.value(),
-            self.coal_consumption_slider2.value(),
-            self.coal_consumption_slider3.value(),
-            self.coal_consumption_slider4.value(),
-            self.coal_consumption_slider5.value()
+            self.coal_consumption_slider1.value() * max_coal_consumption / 100,
+            self.coal_consumption_slider2.value() * max_coal_consumption / 100,
+            self.coal_consumption_slider3.value() * max_coal_consumption / 100,
+            self.coal_consumption_slider4.value() * max_coal_consumption / 100,
+            self.coal_consumption_slider5.value() * max_coal_consumption / 100
         ]
 
     def return_co2_cost_values(self):
@@ -147,10 +150,11 @@ class ThermalCoalConfiguration():
         ]
 
     def return_co2_emission_values(self):
+        max_co2_emission = GeneratorModelLoader.get_thermal_generator_coal().max_fuel_co2_emission
         return [
-            self.coal_co2_emission_slider1.value(),
-            self.coal_co2_emission_slider2.value(),
-            self.coal_co2_emission_slider3.value(),
-            self.coal_co2_emission_slider4.value(),
-            self.coal_co2_emission_slider5.value()
+            self.coal_co2_emission_slider1.value() * max_co2_emission / 100,
+            self.coal_co2_emission_slider2.value() * max_co2_emission / 100,
+            self.coal_co2_emission_slider3.value() * max_co2_emission / 100,
+            self.coal_co2_emission_slider4.value() * max_co2_emission / 100,
+            self.coal_co2_emission_slider5.value() * max_co2_emission / 100
         ]

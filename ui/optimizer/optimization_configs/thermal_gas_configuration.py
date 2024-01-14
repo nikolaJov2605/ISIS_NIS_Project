@@ -1,6 +1,8 @@
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QWidget, QSlider, QLabel
 
+from optimization.generator_model_loader.model_loader import GeneratorModelLoader
+
 class ThermalGasConfiguration():
     def __init__(self, tab) -> None:
 
@@ -93,12 +95,13 @@ class ThermalGasConfiguration():
         self.gas_co2_emission_slider_lbl5.setText(str(self.gas_co2_emission_slider5.value()))
 
     def return_consumption_values(self):
+        max_coal_consumption = GeneratorModelLoader.get_thermal_generator_gas().max_fuel_consumption
         return [
-            self.gas_consumption_slider1.value(),
-            self.gas_consumption_slider2.value(),
-            self.gas_consumption_slider3.value(),
-            self.gas_consumption_slider4.value(),
-            self.gas_consumption_slider5.value()
+            self.gas_consumption_slider1.value() * max_coal_consumption / 100,
+            self.gas_consumption_slider2.value() * max_coal_consumption / 100,
+            self.gas_consumption_slider3.value() * max_coal_consumption / 100,
+            self.gas_consumption_slider4.value() * max_coal_consumption / 100,
+            self.gas_consumption_slider5.value() * max_coal_consumption / 100
         ]
 
     def return_co2_cost_values(self):
@@ -111,10 +114,11 @@ class ThermalGasConfiguration():
         ]
 
     def return_co2_emission_values(self):
+        max_co2_emission = GeneratorModelLoader.get_thermal_generator_gas().max_fuel_co2_emission
         return [
-            self.gas_co2_emission_slider1.value(),
-            self.gas_co2_emission_slider2.value(),
-            self.gas_co2_emission_slider3.value(),
-            self.gas_co2_emission_slider4.value(),
-            self.gas_co2_emission_slider5.value()
+            self.gas_co2_emission_slider1.value() * max_co2_emission / 100,
+            self.gas_co2_emission_slider2.value() * max_co2_emission / 100,
+            self.gas_co2_emission_slider3.value() * max_co2_emission / 100,
+            self.gas_co2_emission_slider4.value() * max_co2_emission / 100,
+            self.gas_co2_emission_slider5.value() * max_co2_emission / 100
         ]

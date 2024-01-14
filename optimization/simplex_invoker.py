@@ -25,8 +25,8 @@ class SimplexInvoker:
         self.wind_generator_count = wind_generator_count
         self.solar_generator_count = solar_generator_count
 
-        self.cost_weight_factor = cost_weight_factor
-        self.co2_emission_weight_factor = co2_emission_weight_factor
+        self.cost_weight_factor = cost_weight_factor / 100
+        self.co2_emission_weight_factor = co2_emission_weight_factor / 100
 
         self.coal_price_per_tone = coal_price_per_tone
         self.gas_price_per_tone = gas_price_per_tone
@@ -71,8 +71,8 @@ class SimplexInvoker:
 
 
 
-    def do_aproximation(self, function_values):
-        x = [0, 1, 2, 3, 4]
+    def do_aproximation(self, function_values, max_generator_power):
+        x = [0.2 * max_generator_power, 0.4 * max_generator_power, 0.6 * max_generator_power, 0.8 * max_generator_power, 1 * max_generator_power]
         y = function_values
         array = []
         for i in range(5):
@@ -83,13 +83,13 @@ class SimplexInvoker:
         return ret_func
 
     def start_optimization(self):
-        coal_consumption_function = self.do_aproximation(self.coal_counsumption_values)
-        coal_co2_emission_function = self.do_aproximation(self.coal_co2_emission_values)
-        coal_co2_cost_function = self.do_aproximation(self.coal_co2_cost_values)
+        coal_consumption_function = self.do_aproximation(self.coal_counsumption_values, GeneratorModelLoader.get_thermal_generator_coal().max_power_production)
+        coal_co2_emission_function = self.do_aproximation(self.coal_co2_emission_values, GeneratorModelLoader.get_thermal_generator_coal().max_power_production)
+        coal_co2_cost_function = self.do_aproximation(self.coal_co2_cost_values, GeneratorModelLoader.get_thermal_generator_coal().max_power_production)
 
-        gas_consumption_function = self.do_aproximation(self.gas_counsumption_values)
-        gas_co2_emission_function = self.do_aproximation(self.gas_co2_emission_values)
-        gas_co2_cost_function = self.do_aproximation(self.gas_co2_cost_values)
+        gas_consumption_function = self.do_aproximation(self.gas_counsumption_values, GeneratorModelLoader.get_thermal_generator_gas().max_power_production)
+        gas_co2_emission_function = self.do_aproximation(self.gas_co2_emission_values, GeneratorModelLoader.get_thermal_generator_gas().max_power_production)
+        gas_co2_cost_function = self.do_aproximation(self.gas_co2_cost_values, GeneratorModelLoader.get_thermal_generator_gas().max_power_production)
 
         hydro_co2_emission_const = self.hydro_co2_emission_value
         hydro_co2_cost_const = self.hydro_co2_cost_value
@@ -111,7 +111,7 @@ class SimplexInvoker:
             self.hydro_generator_hourly_load.append(hydro_hourly_power)
 
     def load_optimization_report(self):
-        ret_datarame = total_load_df = self.database_manager.read_from_database('Results')
+        ret_datarame = self.database_manager.read_from_database('Results')
         ret_datarame['coal_generator_load'] = self.coal_generator_hourly_load
         ret_datarame['gas_generator_load'] = self.gas_generator_hourly_load
         ret_datarame['hydro_generator_load'] = self.hydro_generator_hourly_load

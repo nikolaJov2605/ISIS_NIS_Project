@@ -1,4 +1,6 @@
+from matplotlib import pyplot as plt
 import pandas
+import numpy
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QSlider, QLabel, QTableWidget, QTableWidgetItem, QHeaderView, QPushButton
@@ -104,6 +106,92 @@ class OptimizationTab():
         return df
 
 
+    def plot_dataframe(self, dataframe):
+        # Plotting
+        plt.figure(figsize=(10, 6))
+
+        # Plotting each generator's load
+        plt.plot(dataframe['_time'], dataframe['coal_generator_load'], label='Coil Generator', marker='o')
+        plt.plot(dataframe['_time'], dataframe['gas_generator_load'], label='Gas Generator', marker='o')
+        plt.plot(dataframe['_time'], dataframe['hydro_generator_load'], label='Hydro Generator', marker='o')
+        plt.plot(dataframe['_time'], dataframe['wind_generator_load'], label='Wind Generator', marker='o')
+        plt.plot(dataframe['_time'], dataframe['solar_generator_load'], label='Solar Generator', marker='o')
+
+        # Plotting the target load as a reference
+        plt.plot(dataframe['_time'], dataframe['load'], label='Target Load', linestyle='--', color='black', marker='o')
+
+        # Adding labels and title
+        plt.xlabel('Hour of the Day')
+        plt.ylabel('Load (MW)')
+        plt.title('Hourly Generator Loads')
+        plt.legend()
+        plt.grid(True)
+        plt.xticks(rotation=45)
+
+        # Show the plot
+        plt.tight_layout()
+        plt.show()
+
+    
+    def plot_dataframe1(self, dataframe):
+        load_contribution_df = dataframe.drop(columns=['_time', 'load']).cumsum(axis=1)
+
+        plt.figure(figsize=(10, 6))
+
+        # Plotting the target load as a reference
+        plt.plot(dataframe['_time'], dataframe['load'], label='Target Load', linestyle='--', color='black', marker='o')
+
+        # hydro
+        plt.fill_between(dataframe['_time'], 0, dataframe['hydro_generator_load'], label='Hydro Generator', alpha=0.7, color="blue")
+        # coal
+        plt.fill_between(dataframe['_time'], dataframe['hydro_generator_load'], dataframe['hydro_generator_load'] + dataframe['coal_generator_load'], label='Coal Generator', alpha=0.7, color="brown")
+        # gas
+        plt.fill_between(dataframe['_time'], dataframe['hydro_generator_load'] + dataframe['coal_generator_load'],
+                        dataframe['hydro_generator_load'] + dataframe['coal_generator_load'] + dataframe['gas_generator_load'], label='Gas Generator', alpha=0.7, color="gray")
+        # wind
+        plt.fill_between(dataframe['_time'], dataframe['hydro_generator_load'] + dataframe['coal_generator_load'] + dataframe['gas_generator_load'],
+                        dataframe['hydro_generator_load'] + dataframe['coal_generator_load'] + dataframe['gas_generator_load'] + dataframe['wind_generator_load'],
+                        label='Wind Generator', alpha=0.7, color="green")
+        # solar
+        plt.fill_between(dataframe['_time'], dataframe['hydro_generator_load'] + dataframe['coal_generator_load'] + dataframe['gas_generator_load'] + dataframe['wind_generator_load'],
+                        dataframe['hydro_generator_load'] + dataframe['coal_generator_load'] + dataframe['gas_generator_load'] + dataframe['wind_generator_load'] + dataframe['solar_generator_load'],
+                        label='Solar Generator', alpha=0.7, color="yellow")
+
+
+        # Adding labels and title
+        plt.xlabel('Hour of the Day')
+        plt.ylabel('Load (MW)')
+        plt.title('Hourly Generator Loads')
+        plt.legend()
+        plt.grid(True)
+        plt.xticks(rotation=45)
+
+        # Show the plot
+        plt.tight_layout()
+        plt.show()
+
+    def plot_dataframe2(self, dataframe):
+        target_load = numpy.array(dataframe['load'].tolist())
+        coal_generator_load = numpy.array(dataframe['coal_generator_load'].tolist())
+        gas_generator_load = numpy.array(dataframe['gas_generator_load'].tolist())
+        hydro_generator_load = numpy.array(dataframe['hydro_generator_load'].tolist())
+        wind_generator_load = numpy.array(dataframe['wind_generator_load'].tolist())
+        solar_generator_load = numpy.array(dataframe['solar_generator_load'].tolist())
+
+        time = dataframe['_time'].tolist()
+
+        plt.bar(time, hydro_generator_load, color='blue')
+        plt.bar(time, coal_generator_load, bottom=hydro_generator_load, color='brown')
+        plt.bar(time, gas_generator_load, hydro_generator_load + coal_generator_load, color='gray')
+        plt.bar(time, wind_generator_load, hydro_generator_load + coal_generator_load + gas_generator_load, color = 'green')
+        plt.bar(time, solar_generator_load, hydro_generator_load + coal_generator_load + gas_generator_load + wind_generator_load, color = 'yellow')
+
+        plt.xlabel("Hour of the Day")
+        plt.ylabel("Load (MW)")
+        plt.legend(["Hydro Generator", "Coal Generator", "Gas Generator", "Wind Generator", "Solar Generator"])
+        plt.title("Hourly Generator Loads")
+        plt.show()
+
     def optimize(self):
         thermal_coal_generator_count = self.optimization_config.coal_generator_cnt_box.value()
         thermal_gas_generator_count = self.optimization_config.gas_generator_cnt_box.value()
@@ -143,5 +231,6 @@ class OptimizationTab():
 
         report_data = simplex_invoker.load_optimization_report()
         self.populate_table('thermal_coal_report_table', report_data)
+        self.plot_dataframe1(report_data)
 
         return

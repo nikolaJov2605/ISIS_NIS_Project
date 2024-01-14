@@ -4,6 +4,7 @@ class Simplex():
     def __init__(self) -> None:
         pass
 
+
     def do_optimization(self, thermal_coal_generator_count, thermal_gas_generator_count, hydro_generator_count, wind_generator_count, solar_generator_count,
                  cost_weight_factor, co2_emission_weight_factor, coal_price_per_tone, gas_price_per_tone,
                  coal_consumption_function, coal_co2_emission_function, coal_co2_cost_function,
@@ -39,23 +40,55 @@ class Simplex():
 
         #constraint = x0 + x1 + x2 == target_load ovo moze u invokeru da se odradi pa da se kroz loop poziva optimizacija za svaki sat
         constraint = x0 + x1 + x2 == target_load
+        # coal_power_constraint = x0 <= GeneratorModelLoader.get_thermal_generator_coal().max_power_production
+        # gas_power_constraint = x1 <= GeneratorModelLoader.get_thermal_generator_gas().max_power_production
+        # hydro_power_constraint = x2 <= GeneratorModelLoader.get_hydro_generator().max_power_production
 
-        #prob = LpProblem("Power_Optimization", LpMinimize)
-        problem = LpProblem("Power_Load_Optimization", LpMinimize)
+        self.problem = LpProblem("Power_Load_Optimization", LpMinimize)
 
-        problem += objective_function
-        problem += constraint
+        self.problem += objective_function
+        self.problem += constraint
+        # problem += coal_power_constraint
+        # problem += gas_power_constraint
+        # problem += hydro_power_constraint
 
-        problem.solve()
+        self.problem.solve()
+        #finished = False
+
+        # while(not(finished)):
+        #     finished = True
+        #     self.problem.solve()
+
+        #     for var in self.problem.variables():
+        #         print(var.name, " = ", var.varValue)
+        #         if var.name == "x_coal":
+        #             min_power = GeneratorModelLoader.get_thermal_generator_coal().min_power_production * thermal_coal_generator_count
+        #             max_power = GeneratorModelLoader.get_thermal_generator_coal().max_power_production * thermal_coal_generator_count
+        #             if (var.varValue != 0 and var.varValue < min_power) or (var.varValue != 0 and var.varValue > max_power):
+        #                 var.bounds(min_power, max_power)
+        #                 finished = False
+        #         elif  var.name == "x_gas":
+        #             min_power = GeneratorModelLoader.get_thermal_generator_gas().min_power_production * thermal_gas_generator_count
+        #             max_power = GeneratorModelLoader.get_thermal_generator_gas().max_power_production * thermal_gas_generator_count
+        #             if (var.varValue != 0 and var.varValue < min_power) or (var.varValue != 0 and var.varValue > max_power):
+        #                 var.bounds(min_power, max_power)
+        #                 finished = False
+        #         else:
+        #             min_power = GeneratorModelLoader.get_hydro_generator().min_power_production * hydro_generator_count
+        #             max_power = GeneratorModelLoader.get_hydro_generator().max_power_production * hydro_generator_count
+        #             if (var.varValue != 0 and var.varValue < min_power) or (var.varValue != 0 and var.varValue > max_power):
+        #                 var.bounds(min_power, max_power)
+        #                 finished = False
 
         optimal_power_coal = value(x0)
         optimal_power_gas = value(x1)
         optimal_power_hydro = value(x2)
 
-        # Print or use the optimal values as needed
         print("Optimal Power from Coal: ", optimal_power_coal)
         print("Optimal Power from Gas: ", optimal_power_gas)
         print("Optimal Power from Hydro: ", optimal_power_hydro)
         print("Target Power Load:", target_load)
 
         return optimal_power_coal, optimal_power_gas, optimal_power_hydro
+    
+

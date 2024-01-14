@@ -10,3 +10,10 @@
 4. Cost/price za hidroelektrane?
 
 3. Odbrana? Test?
+
+
+Optimizacija:
+    - sredjivanje dijagrama
+    - skontaj sta je sa optimizacijom
+    - report
+    - skockaj da se ne poziva baza sa UI sloja
