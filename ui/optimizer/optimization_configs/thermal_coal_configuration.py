@@ -14,12 +14,10 @@ class ThermalCoalConfiguration():
         self.initialize_coal_consumption_elements(tab)
         self.initialize_coal_price_elements(tab)
         self.initialize_coal_co2_emission_elements(tab)
-        self.initialize_buttons(tab)
 
         self.update_lbl_values()
 
         self.slider_change_connections()
-        self.button_connections()
 
         self.aproximation = FunctionAproximation()
 
@@ -63,8 +61,8 @@ class ThermalCoalConfiguration():
         self.coal_co2_emission_slider_lbl4 = tab.findChild(QLabel, 'coal_co2_emission_slider_lbl4')
         self.coal_co2_emission_slider_lbl5 = tab.findChild(QLabel, 'coal_co2_emission_slider_lbl5')
 
-    def initialize_buttons(self, tab: QWidget):
-        self.aproximation_btn: QPushButton = tab.findChild(QPushButton, 'aproximation_btn')
+    # def initialize_buttons(self, tab: QWidget):
+    #     self.aproximation_btn: QPushButton = tab.findChild(QPushButton, 'aproximation_btn')
 
 
     def slider_change_connections(self):
@@ -86,13 +84,16 @@ class ThermalCoalConfiguration():
         self.coal_co2_emission_slider4.valueChanged.connect(self.update_lbl_values)
         self.coal_co2_emission_slider5.valueChanged.connect(self.update_lbl_values)
 
-    def button_connections(self):
-        self.aproximation_btn.clicked.connect(self.do_aproximation)
+    # def button_connections(self):
+    #     self.aproximation_btn.clicked.connect(self.do_aproximation)
 
     def do_aproximation(self):
         max_generator_power = GeneratorModelLoader.get_thermal_generator_coal().max_power_production
-        x = [0.2 * max_generator_power, 0.4 * max_generator_power, 0.6 * max_generator_power, 0.8 * max_generator_power, 1 * max_generator_power]
-        y = self.return_co2_emission_values()
+        x = [0, 0.2 * max_generator_power, 0.4 * max_generator_power, 0.6 * max_generator_power, 0.8 * max_generator_power, 1 * max_generator_power]
+        y = [0]
+        for val in self.return_co2_cost_values():
+            y.append(val)
+        #y = self.return_co2_cost_values()
         array = []
         for i in range(5):
             array.append((x[i], y[i]))
@@ -134,11 +135,11 @@ class ThermalCoalConfiguration():
     def return_consumption_values(self):
         max_coal_consumption = GeneratorModelLoader.get_thermal_generator_coal().max_fuel_consumption
         return [
-            self.coal_consumption_slider1.value() * max_coal_consumption / 100,
-            self.coal_consumption_slider2.value() * max_coal_consumption / 100,
-            self.coal_consumption_slider3.value() * max_coal_consumption / 100,
-            self.coal_consumption_slider4.value() * max_coal_consumption / 100,
-            self.coal_consumption_slider5.value() * max_coal_consumption / 100
+            self.coal_consumption_slider1.value() / 100,
+            self.coal_consumption_slider2.value() / 100,
+            self.coal_consumption_slider3.value() / 100,
+            self.coal_consumption_slider4.value() / 100,
+            self.coal_consumption_slider5.value() / 100
         ]
 
     def return_co2_cost_values(self):
@@ -153,9 +154,9 @@ class ThermalCoalConfiguration():
     def return_co2_emission_values(self):
         max_co2_emission = GeneratorModelLoader.get_thermal_generator_coal().max_fuel_co2_emission
         return [
-            self.coal_co2_emission_slider1.value() * max_co2_emission / 100,
-            self.coal_co2_emission_slider2.value() * max_co2_emission / 100,
-            self.coal_co2_emission_slider3.value() * max_co2_emission / 100,
-            self.coal_co2_emission_slider4.value() * max_co2_emission / 100,
-            self.coal_co2_emission_slider5.value() * max_co2_emission / 100
+            self.coal_co2_emission_slider1.value() / 100,
+            self.coal_co2_emission_slider2.value() / 100,
+            self.coal_co2_emission_slider3.value() / 100,
+            self.coal_co2_emission_slider4.value() / 100,
+            self.coal_co2_emission_slider5.value() / 100
         ]

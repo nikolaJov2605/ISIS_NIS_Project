@@ -113,20 +113,24 @@ class OptimizationTab():
         plt.plot(dataframe['_time'], dataframe['load'], label='Target Load', linestyle='--', color='black', marker='o')
 
         # hydro
-        plt.fill_between(dataframe['_time'], 0, dataframe['hydro_generator_load'], label='Hydro Generator', alpha=0.7, color="blue")
+        plt.fill_between(dataframe['_time'], 0, dataframe['hydro'], label='Hydro Generator', alpha=0.7, color="blue")
         # coal
-        plt.fill_between(dataframe['_time'], dataframe['hydro_generator_load'], dataframe['hydro_generator_load'] + dataframe['coal_generator_load'], label='Coal Generator', alpha=0.7, color="brown")
+        plt.fill_between(dataframe['_time'], dataframe['hydro'], dataframe['hydro'] + dataframe['coal'], label='Coal Generator', alpha=0.7, color="brown")
         # gas
-        plt.fill_between(dataframe['_time'], dataframe['hydro_generator_load'] + dataframe['coal_generator_load'],
-                        dataframe['hydro_generator_load'] + dataframe['coal_generator_load'] + dataframe['gas_generator_load'], label='Gas Generator', alpha=0.7, color="gray")
+        plt.fill_between(dataframe['_time'], dataframe['hydro'] + dataframe['coal'],
+                        dataframe['hydro'] + dataframe['coal'] + dataframe['gas'], label='Gas Generator', alpha=0.7, color="gray")
         # wind
-        plt.fill_between(dataframe['_time'], dataframe['hydro_generator_load'] + dataframe['coal_generator_load'] + dataframe['gas_generator_load'],
-                        dataframe['hydro_generator_load'] + dataframe['coal_generator_load'] + dataframe['gas_generator_load'] + dataframe['wind_generator_load'],
+        plt.fill_between(dataframe['_time'], dataframe['hydro'] + dataframe['coal'] + dataframe['gas'],
+                        dataframe['hydro'] + dataframe['coal'] + dataframe['gas'] + dataframe['wind'],
                         label='Wind Generator', alpha=0.7, color="green")
         # solar
-        plt.fill_between(dataframe['_time'], dataframe['hydro_generator_load'] + dataframe['coal_generator_load'] + dataframe['gas_generator_load'] + dataframe['wind_generator_load'],
-                        dataframe['hydro_generator_load'] + dataframe['coal_generator_load'] + dataframe['gas_generator_load'] + dataframe['wind_generator_load'] + dataframe['solar_generator_load'],
+        plt.fill_between(dataframe['_time'], dataframe['hydro'] + dataframe['coal'] + dataframe['gas'] + dataframe['wind'],
+                        dataframe['hydro'] + dataframe['coal'] + dataframe['gas'] + dataframe['wind'] + dataframe['solar'],
                         label='Solar Generator', alpha=0.7, color="yellow")
+        # missing
+        plt.fill_between(dataframe['_time'], dataframe['hydro'] + dataframe['coal'] + dataframe['gas'] + dataframe['wind'] + dataframe['solar'],
+                        dataframe['hydro'] + dataframe['coal'] + dataframe['gas'] + dataframe['wind'] + dataframe['solar'] + dataframe['missing'],
+                        label='Missing Load', alpha=0.7, color="red")
 
 
         # Adding labels and title

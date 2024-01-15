@@ -890,11 +890,11 @@
         <x>10</x>
         <y>10</y>
         <width>1021</width>
-        <height>291</height>
+        <height>341</height>
        </rect>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="thermal_coal_tab">
        <attribute name="title">
@@ -933,7 +933,7 @@
          </rect>
         </property>
         <property name="title">
-         <string>Coal consumption</string>
+         <string>Coal consumption to power load</string>
         </property>
         <widget class="QSlider" name="coal_consumption_slider1">
          <property name="geometry">
@@ -1142,7 +1142,7 @@
          </rect>
         </property>
         <property name="title">
-         <string>Coal CO2 cost</string>
+         <string>Coal CO2 cost to power load</string>
         </property>
         <widget class="QSlider" name="coal_co2_cost_slider1">
          <property name="geometry">
@@ -1345,7 +1345,7 @@
          </rect>
         </property>
         <property name="title">
-         <string>CO2 emission</string>
+         <string>CO2 emission to power load</string>
         </property>
         <widget class="QSlider" name="coal_co2_emission_slider1">
          <property name="geometry">
@@ -1538,19 +1538,6 @@
          </property>
         </widget>
        </widget>
-       <widget class="QPushButton" name="aproximation_btn">
-        <property name="geometry">
-         <rect>
-          <x>140</x>
-          <y>10</y>
-          <width>141</width>
-          <height>28</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Aproximation</string>
-        </property>
-       </widget>
       </widget>
       <widget class="QWidget" name="thermal_gas_tab">
        <attribute name="title">
@@ -1566,7 +1553,7 @@
          </rect>
         </property>
         <property name="title">
-         <string>CO2 emission</string>
+         <string>CO2 emission to power load</string>
         </property>
         <widget class="QSlider" name="gas_co2_emission_slider1">
          <property name="geometry">
@@ -1769,7 +1756,7 @@
          </rect>
         </property>
         <property name="title">
-         <string>Gas consumption</string>
+         <string>Gas consumption to power load</string>
         </property>
         <widget class="QSlider" name="gas_consumption_slider1">
          <property name="geometry">
@@ -1995,7 +1982,7 @@
          </rect>
         </property>
         <property name="title">
-         <string>Gas CO2 cost</string>
+         <string>Gas CO2 cost to power load</string>
         </property>
         <widget class="QSlider" name="gas_co2_cost_slider1">
          <property name="geometry">
@@ -2545,7 +2532,7 @@
           <set>Qt::AlignCenter</set>
          </property>
          <property name="maximum">
-          <number>2000</number>
+          <number>50000</number>
          </property>
          <property name="value">
           <number>130</number>
@@ -2564,7 +2551,7 @@
           <set>Qt::AlignCenter</set>
          </property>
          <property name="maximum">
-          <number>2000</number>
+          <number>50000</number>
          </property>
          <property name="value">
           <number>25</number>
@@ -2679,6 +2666,9 @@
          <property name="singleStep">
           <number>10</number>
          </property>
+         <property name="value">
+          <number>50</number>
+         </property>
         </widget>
         <widget class="QSpinBox" name="co2_emission_optimization_percent_box">
          <property name="geometry">
@@ -2697,6 +2687,9 @@
          </property>
          <property name="singleStep">
           <number>10</number>
+         </property>
+         <property name="value">
+          <number>50</number>
          </property>
         </widget>
        </widget>
@@ -2822,9 +2815,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>400</y>
+        <y>460</y>
         <width>1021</width>
-        <height>291</height>
+        <height>441</height>
        </rect>
       </property>
       <property name="font">
@@ -2834,7 +2827,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="load_report_tab">
        <attribute name="title">
@@ -2845,8 +2838,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>941</width>
-          <height>201</height>
+          <width>991</width>
+          <height>351</height>
          </rect>
         </property>
        </widget>
@@ -2854,7 +2847,7 @@
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>220</y>
+          <y>370</y>
           <width>81</width>
           <height>31</height>
          </rect>
@@ -2867,7 +2860,7 @@
         <property name="geometry">
          <rect>
           <x>110</x>
-          <y>220</y>
+          <y>370</y>
           <width>131</width>
           <height>31</height>
          </rect>
@@ -2887,14 +2880,14 @@
           <x>10</x>
           <y>10</y>
           <width>1001</width>
-          <height>241</height>
+          <height>391</height>
          </rect>
         </property>
        </widget>
       </widget>
       <widget class="QWidget" name="generator_cost_tab">
        <attribute name="title">
-        <string>Generator CO2 Cost ?</string>
+        <string>Generator CO2 Cost</string>
        </attribute>
        <widget class="QTableWidget" name="cost_report_table">
         <property name="geometry">
@@ -2902,7 +2895,7 @@
           <x>10</x>
           <y>10</y>
           <width>1001</width>
-          <height>241</height>
+          <height>391</height>
          </rect>
         </property>
        </widget>
@@ -2917,7 +2910,7 @@
           <x>10</x>
           <y>10</y>
           <width>1001</width>
-          <height>241</height>
+          <height>391</height>
          </rect>
         </property>
        </widget>
@@ -2927,7 +2920,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>360</y>
+        <y>420</y>
         <width>1021</width>
         <height>31</height>
        </rect>
@@ -2950,7 +2943,7 @@
       <property name="geometry">
        <rect>
         <x>300</x>
-        <y>320</y>
+        <y>360</y>
         <width>441</width>
         <height>31</height>
        </rect>
