@@ -22,4 +22,10 @@ class DataHelper:
         del dataframe['_time']
         #dataframe.to_csv('db_measures.csv', index=False)
         return dataframe
+    
+    def load_testing_data_from_database(self, starting_time, ending_time):
+        dataframe = self.database_manager.read_testing_measures_from_database_by_time(starting_time, ending_time)
+        del dataframe['_time']
+        return dataframe
+
 

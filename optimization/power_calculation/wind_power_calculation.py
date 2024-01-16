@@ -37,6 +37,6 @@ class WindPowerCalculation:
         #optimization_date =optimization_date.dateTime().toPyDateTime()
         length_in_days = 1
         ending_date = optimization_date + timedelta(days=length_in_days - 1)
-        dataframe = self.database_manager.read_measures_from_database_by_time(optimization_date, ending_date)
+        dataframe = self.database_manager.read_testing_measures_from_database_by_time(optimization_date, ending_date)
         ret_df = dataframe[['_time', 'Ff']]
         return ret_df

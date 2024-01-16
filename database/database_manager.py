@@ -9,8 +9,7 @@ class DatabaseManager():
         self.connection_string = "DRIVER={ODBC Driver 17 for SQL Server};Server=DESKTOP-1TFLJCH;Database=LoadPredictionDatabase;Trusted_Connection=yes;"
         quoted = urllib.parse.quote_plus(self.connection_string)
         self.engine = create_engine('mssql+pyodbc:///?odbc_connect={}'.format(quoted))
-        #self.connection = odbc.connect(self.connection_string)
-        #self.cursor = self.connection.cursor()
+
 
     def write_to_database(self, data_frame, table_name):
         try:
@@ -34,6 +33,17 @@ class DatabaseManager():
         ending_time = ending_time.strftime('%Y-%m-%d')
         params = [starting_time, ending_time]
         query = "SELECT * from Measures WHERE _time >= '{param0}' and _time < '{param1}'".format(param0=params[0], param1=params[1])
+
+        df = pandas.read_sql_query(query, con=self.engine)
+        return df
+
+    def read_testing_measures_from_database_by_time(self, starting_time, ending_time):
+        #ending_time = datetime.strptime(ending_time, '%Y-%m-%d')
+        starting_time = starting_time.strftime('%Y-%m-%d')
+        ending_time = ending_time + timedelta(days=1)
+        ending_time = ending_time.strftime('%Y-%m-%d')
+        params = [starting_time, ending_time]
+        query = "SELECT * from TestMeasures WHERE _time >= '{param0}' and _time < '{param1}'".format(param0=params[0], param1=params[1])
 
         df = pandas.read_sql_query(query, con=self.engine)
         return df

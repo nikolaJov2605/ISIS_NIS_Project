@@ -1,9 +1,0 @@
-1. Je li ispravno pri testiranju modela izjednaciti train i test skupove?
-    - podaci koje dodatno ucitamo na odbrani treba da nam budu test podaci i taj datum ce biti definisan na UI-u?
-    - treba li nam i dalje podela izmedju trening i test podataka sada kada ne treniramo model vec koristimo postojeci?
-    - D:\Fakultet\Master\Inteligentni softverski infrastrukturni sistemi\Projekat\ISIS_NIS_Project\load_forecast\training\model_loader.py
-    - prepare_model_for_prediction() metoda
-
-2. Ucitavanje modela preko UI-a?
-
-2. Odbrana? Test? Termin?

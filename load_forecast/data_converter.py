@@ -4,15 +4,13 @@ from load_forecast.data_preparation.solar_radiation_preparation import SolarRadi
 from load_forecast.data_preparation.time_preparation import TimePreparer
 from load_forecast.data_preparation.weather_preparation import WeatherPreparer
 from load_forecast.data_preparation.load_preparation import LoadPreparer
-#from database.database import Database
-#from database.data_manager import DataManager
 
 class DataConverter:
     def __init__(self, filename):
         self.filename = filename
 
 
-    def load_and_convert_data(self):
+    def load_and_convert_data(self, testing: bool):
         # ----------------------------- WEATHER COLLECTION ----------------------------- #
 
 
@@ -27,12 +25,17 @@ class DataConverter:
         exc_weather['_time'] = pandas.to_datetime(exc_weather['_time'], dayfirst=True)
 
         wp = WeatherPreparer()
-        exc_weather = wp.prepare_weather_data(exc_weather)
+        exc_weather = wp.prepare_weather_data(exc_weather, testing)
 
         #exc_weather.to_csv('weather.csv', index=False)
 
+        if testing:
+            tp = TimePreparer(exc_weather)
+            exc_weather = tp.add_time_fields()
+            return exc_weather
 
         # ----------------------------- LOAD COLLECTION ----------------------------- #
+
 
         load_cols = ["DateShort", "TimeFrom", "TimeTo", "Load (MW/h)"]
         exc_load = pandas.read_excel(self.filename, sheet_name='load', usecols=load_cols)
@@ -48,8 +51,8 @@ class DataConverter:
         measures = pandas.merge(exc_weather, exc_load, on='_time', how='left')
 
         # del measures['Local time']
-
         tp = TimePreparer(measures)
+
 
         measures = tp.add_time_fields()
 

@@ -13,7 +13,6 @@ class TimePreparer:
         self.insert_hours_columns()
         self.insert_day_columns()
         self.insert_month_collumns()
-        #self.insert_season_collumns()
 
         #del self.dataframe['_time']
         return self.dataframe

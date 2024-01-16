@@ -2,8 +2,7 @@ import datetime
 import numpy
 import pandas
 
-# additional: Dewpoint Temperature, Amount of Precipitation, Horizontal Visibility
-# relative humidity, mean wind speed, total cloud cover
+
 WEATHER_COLS = ["Local time","T", "U", "Ff", "N"]
 
 class WeatherPreparer():
@@ -41,8 +40,9 @@ class WeatherPreparer():
         return data_frame
 
 
-    def prepare_weather_data(self, data_frame):
-        data_frame = self.add_missing_entries(data_frame)
+    def prepare_weather_data(self, data_frame, testing: bool):
+        if not(testing):
+            data_frame = self.add_missing_entries(data_frame)
         data_frame['U'] = self.fix_cloud_cover(data_frame)
         data_frame['U'] = data_frame['U'].astype(float).interpolate(method="slinear", fill_value="extrapolate", limit_direction="both").round(decimals=1)
         data_frame['Ff'] = data_frame['Ff'].astype(float).interpolate(method="slinear", fill_value="extrapolate", limit_direction="both").round(decimals=1)

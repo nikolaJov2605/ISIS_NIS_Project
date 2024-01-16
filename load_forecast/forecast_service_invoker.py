@@ -8,7 +8,8 @@ from load_forecast.plotting import Plotting
 from load_forecast.scorer import Scorer
 from load_forecast.training.ann_regression import AnnRegression
 from load_forecast.training.data_preparer import DataPreparer
-from load_forecast.training.model_loader import ModelLoader
+from load_forecast.training.model_creator import ModelCreator
+from load_forecast.training.prediction import Prediction
 
 
 class ForecastServiceInvoker:
@@ -23,9 +24,9 @@ class ForecastServiceInvoker:
         radiation_df = srp.preprocess_radiation_data()
         return radiation_df
 
-    def preprocess_data(self, path_to_data):
+    def preprocess_data(self, path_to_data, testing: bool):
         data_converter = DataConverter(path_to_data)
-        self.preprocessed_data = data_converter.load_and_convert_data()
+        self.preprocessed_data = data_converter.load_and_convert_data(testing)
 
     def get_min_date(self):
         return min(self.preprocessed_data['_time'])
@@ -39,8 +40,17 @@ class ForecastServiceInvoker:
     def get_max_date_from_dataset(self, dataset):
         return max(dataset['_time'])
 
+    def write_test_data_to_database(self, path_to_data):
+        self.preprocess_data(path_to_data, testing=True)
+
+        write_data = self.database_manager.write_to_database(self.preprocessed_data, 'TestMeasures')
+        if write_data == False:
+            raise Exception("Writing testing measurment data to database failed!")
+
+        return self.preprocessed_data, True
+
     def write_data_to_database(self, path_to_data):
-        self.preprocess_data(path_to_data)
+        self.preprocess_data(path_to_data, testing=False)
         solar_radiation_data = self.preprocess_radiation_data()
 
         write_data = self.database_manager.write_to_database(self.preprocessed_data, 'Measures')
@@ -58,25 +68,20 @@ class ForecastServiceInvoker:
         max_date = self.get_max_date()
         if ending_date <= starting_date or starting_date < min_date or starting_date > max_date:
             raise Exception("Invalid date input")
-        #starting_date = starting_date.toString('yyyy-MM-dd')
-        #ending_date = ending_date.toString('yyyy-MM-dd')
 
-        data_preparer = DataPreparer(starting_date, ending_date)
-        trainX, trainY, testX, testY = data_preparer.prepare_for_training()
-        time_begin = time.time()
-        trainPredict, testPredict = self.ann_regression.compile_fit_predict(trainX, trainY, testX, do_training)
-        time_end = time.time()
-        print('Training duration: %.2f seconds' % (time_end - time_begin))
+        modelCreator = ModelCreator()
+        y_predicted, y_test = modelCreator.generate_model(starting_date, ending_date)
 
-        trainPredict, trainY, testPredict, testY = data_preparer.inverse_transform(trainPredict, testPredict)
-
-        return trainPredict, trainY, testPredict, testY
+        return y_predicted, y_test
 
 
-    def load_existing_trained_model_and_predict(self, starting_date, ending_date, do_training):
-        #trainPredict, testPredict = self.ann_regression.get_selected_model(model_path, )
+    def load_existing_trained_model_and_predict(self, starting_date, ending_date, do_training, testing: bool):
+        dataframe = pandas.DataFrame()
+        if not(testing):
+            dataframe = self.database_manager.read_measures_from_database_by_time(starting_date, ending_date)
+        else:
+            dataframe = self.database_manager.read_testing_measures_from_database_by_time(starting_date, ending_date)
 
-        dataframe = self.database_manager.read_measures_from_database_by_time(starting_date, ending_date)
         min_date = datetime.min
 
         try:
@@ -86,37 +91,21 @@ class ForecastServiceInvoker:
         if starting_date < min_date:
             raise Exception("Invalid date input")
 
-        loader = ModelLoader(starting_date, ending_date)
-        trainX, trainY, testX, testY = loader.prepare_model_for_prediction()
 
-        trainPredict, testPredict = self.ann_regression.compile_fit_predict(trainX, trainY, testX, do_training)
+        if testing:
+            prediction = Prediction()
+            predicted_df = prediction.test_predict(starting_date, ending_date)
+            self.database_manager.write_to_database(predicted_df, "Results")
+        else:
+            prediction = Prediction()
+            y_test, y_predicted = prediction.predict(starting_date, ending_date)
+            self.database_manager.write_to_database(y_predicted, "Results")
 
-        trainPredict, trainY, testPredict, testY = loader.inverse_transform(trainPredict, testPredict)
+            plotting = Plotting()
+            plotting.show_plots(y_predicted, y_test)
 
-        print("\nCalculating error...")
-        scorer = Scorer()
-        trainScore, testScore = scorer.get_rmse_score(trainY, trainPredict, testY, testPredict)
-        print('Train Score: %.2f RMSE' % (trainScore))
-        print('Test Score: %.2f RMSE' % (testScore))
-        trainScore, testScore = scorer.get_mape_score(trainY, trainPredict, testY, testPredict)
-        print('Train Score: %.2f MAPE' % (trainScore))
-        print('Test Score: %.2f MAPE' % (testScore))
-        # self.plot(testPredict, 'w', "prediction")
-        # self.plot(testY, 'r', "actual")
-        print("\n\n--------------------------------------------------------\n")
-        custom_plotting = Plotting()
-        custom_plotting.show_plots(testPredict, testY)
 
     def export_results(self, starting_date, ending_date):
-        dataframe = self.database_manager.read_measures_from_database_by_time(starting_date, ending_date)
-        time_load_dataframe = dataframe[["_time", "load"]]
-        #exc_weather.to_csv('weather.csv', index=False)
-        time_load_dataframe.to_csv('time_load.csv', index=False)
-
-        write_data = self.database_manager.write_to_database(time_load_dataframe, 'Results')
-        if write_data == False:
-            raise Exception("Writing to database failed")
-
         read_data = self.database_manager.read_from_database('Results')
 
         return read_data
@@ -131,7 +120,9 @@ class ForecastServiceInvoker:
     def filter_results(self, starting_date, ending_date):
         dataframe = self.database_manager.read_results_from_database_by_time(starting_date, ending_date)
         return dataframe
-    
+
     def read_db_table(self, table_name):
         table_data = self.database_manager.read_from_database(table_name)
         return table_data
+
+

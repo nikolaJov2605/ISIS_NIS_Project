@@ -337,7 +337,7 @@
       </widget>
       <widget class="QPushButton" name="trainButton">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="geometry">
         <rect>
@@ -557,9 +557,9 @@
        </font>
       </property>
       <property name="title">
-       <string>Model loader</string>
+       <string>Test loader</string>
       </property>
-      <widget class="QLineEdit" name="importModelEdit">
+      <widget class="QLineEdit" name="importTestEdit">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -583,12 +583,12 @@
         <bool>false</bool>
        </property>
        <property name="placeholderText">
-        <string>Import model</string>
+        <string>Import test data</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="browseModelButton">
+      <widget class="QPushButton" name="browseTestButton">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="geometry">
         <rect>
@@ -607,7 +607,7 @@
         <string>Browse</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="loadModelButton">
+      <widget class="QPushButton" name="loadTestButton">
        <property name="enabled">
         <bool>false</bool>
        </property>
